@@ -11,5 +11,10 @@
   "dependencies": {
     "@supabase/ssr": "^0.4.0",
     "@supabase/supabase-js": "^2.45.1"
+  },
+  "exports": {
+    "./client": "./src/client/client.ts",
+    "./middleware": "./src/client/middleware.ts",
+    "./server": "./src/client/server.ts"
   }
 }

@@ -34,8 +34,11 @@
   },
   "exports": {
     "./button": "./src/components/button.tsx",
+    "./dialog": "./src/components/dialog.tsx",
+    "./icons": "./src/components/icons.tsx",
+    "./cn": "./src/utils/cn.ts",
     "./globals.css": "./src/globals.css",
-    "./postcss": "./postcss.config.js",
+    "./postcss": "./postcss.config.cjs",
     "./tailwind.config": "./tailwind.config.ts"
   }
 }
