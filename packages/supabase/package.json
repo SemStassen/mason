@@ -1,0 +1,15 @@
+{
+  "name": "@mason/supabase",
+  "version": "0.0.0",
+  "private": true,
+  "scripts": {},
+  "devDependencies": {
+    "@mason/eslint-config": "workspace:*",
+    "eslint": "^8",
+    "typescript": "^5.3.3"
+  },
+  "dependencies": {
+    "@supabase/ssr": "^0.4.0",
+    "@supabase/supabase-js": "^2.45.1"
+  }
+}
