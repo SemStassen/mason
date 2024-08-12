@@ -3,8 +3,8 @@
 import * as DialogPrimitive from "@radix-ui/react-dialog";
 import { Icons } from "./icons";
 
-import { cn } from "../utils";
 import { forwardRef } from "react";
+import { cn } from "../utils";
 
 const Dialog = DialogPrimitive.Root;
 

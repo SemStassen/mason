@@ -29,6 +29,8 @@ export async function middleware(request: NextRequest) {
     return NextResponse.redirect(loginURL);
   }
 
+  if (session && newURL.pathname !== "/setup") {
+  }
   return response;
 }
 

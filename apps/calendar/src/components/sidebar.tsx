@@ -1,10 +1,10 @@
 "use client";
 
 import { Button } from "@mason/ui/button";
+import { cn } from "@mason/ui/cn";
 import { Icons } from "@mason/ui/icons";
 import Link from "next/link";
 import { usePathname } from "next/navigation";
-import { cn } from "@mason/ui/cn";
 
 const items = [
   {

@@ -3,10 +3,13 @@
   "version": "0.1.0",
   "private": true,
   "scripts": {
-    "dev": "next dev --turbo",
     "build": "next build",
+    "clean": "git clean -xdf .next .turbo node_modules",
+    "dev": "next dev --turbo",
+    "lint": "next lint",
+    "format": "biome format --write .",
     "start": "next start",
-    "lint": "next lint"
+    "typecheck": "tsc --noEmit"
   },
   "dependencies": {
     "@hookform/resolvers": "^3.9.0",
@@ -24,7 +27,6 @@
     "zod": "^3.23.8"
   },
   "devDependencies": {
-    "@mason/eslint-config": "workspace:*",
     "@mason/tsconfig": "workspace:*",
     "typescript": "^5",
     "@types/node": "^20",

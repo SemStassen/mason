@@ -1,11 +1,12 @@
 import { logger } from "@/utils/logger";
+import { getUser } from "@mason/supabase/cached-queries";
+import { createClient } from "@mason/supabase/server";
 import {
-  createSafeActionClient,
   DEFAULT_SERVER_ERROR_MESSAGE,
+  createSafeActionClient,
 } from "next-safe-action";
 import { z } from "zod";
 
-// @ts-ignore
 export const actionClient = createSafeActionClient({
   handleReturnedServerError(e) {
     if (e instanceof Error) {
@@ -31,8 +32,8 @@ export const actionClientWithMeta = createSafeActionClient({
   },
 });
 
-export const authActionClient = actionClientWithMeta.use(
-  async ({ next, clientInput, metadata }) => {
+export const authActionClient = actionClientWithMeta
+  .use(async ({ next, clientInput, metadata }) => {
     const result = await next({ ctx: null });
 
     if (process.env.NODE_ENV === "development") {
@@ -44,6 +45,20 @@ export const authActionClient = actionClientWithMeta.use(
     }
 
     return result;
-  },
-);
+  })
+  .use(async ({ next }) => {
+    const user = await getUser();
+    const supabase = createClient();
+
+    if (!user?.data) {
+      throw new Error("Unauthorized");
+    }
+
+    return await next({
+      ctx: {
+        user: user.data,
+        supabase,
+      },
+    });
+  });
 // TODO: Extend this with better Logging and ratelimiting

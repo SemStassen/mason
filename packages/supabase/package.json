@@ -2,19 +2,27 @@
   "name": "@mason/supabase",
   "version": "0.0.0",
   "private": true,
-  "scripts": {},
+  "scripts": {
+    "clean": "rm -rf .turbo node_modules",
+    "lint": "biome check .",
+    "format": "biome format --write .",
+    "typecheck": "tsc --noEmit"
+  },
   "devDependencies": {
-    "@mason/eslint-config": "workspace:*",
-    "eslint": "^8",
     "typescript": "^5.3.3"
   },
   "dependencies": {
     "@supabase/ssr": "^0.4.0",
-    "@supabase/supabase-js": "^2.45.1"
+    "@supabase/supabase-js": "^2.45.1",
+    "react": "19.0.0-rc-f994737d14-20240522",
+    "server-only": "^0.0.1"
   },
   "exports": {
+    "./cached-queries": "./src/queries/cached-queries.ts",
     "./client": "./src/client/client.ts",
     "./middleware": "./src/client/middleware.ts",
+    "./mutations": "./src/mutations/index.ts",
+    "./queries": "./src/queries/index.ts",
     "./server": "./src/client/server.ts"
   }
 }
