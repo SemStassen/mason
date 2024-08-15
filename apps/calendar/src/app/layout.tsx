@@ -1,8 +1,9 @@
+import { Toaster } from "@mason/ui/toaster";
 import { GeistMono } from "geist/font/mono";
 import { GeistSans } from "geist/font/sans";
 import type { Metadata } from "next";
 import "@mason/ui/globals.css";
-import "..//globals.css";
+import "../globals.css";
 
 export const metadata: Metadata = {
   title: "Create Next App",
@@ -18,6 +19,7 @@ export default function RootLayout({
     <html lang="en" suppressHydrationWarning>
       <body className={`${GeistSans.variable} ${GeistMono.variable} font-sans`}>
         {children}
+        <Toaster />
       </body>
     </html>
   );

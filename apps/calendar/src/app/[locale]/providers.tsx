@@ -11,7 +11,7 @@ interface ProvidersProps {
 export function Providers({ children, locale }: ProvidersProps) {
   return (
     <I18nProviderClient locale={locale}>
-      <ThemeProvider>{children}</ThemeProvider>
+      <ThemeProvider defaultTheme="dark">{children}</ThemeProvider>
     </I18nProviderClient>
   );
 }

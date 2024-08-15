@@ -1,13 +1,21 @@
 import type { ComponentProps } from "react";
 import {
-  MdClose,
+  MdOutlineArrowLeft,
+  MdOutlineArrowRight,
   MdOutlineCalendarToday,
+  MdOutlineChevronLeft,
+  MdOutlineChevronRight,
+  MdOutlineClose,
   MdOutlineSettings,
 } from "react-icons/md";
 
 export const Icons = {
+  ArrowLeft: MdOutlineArrowLeft,
+  ArrowRight: MdOutlineArrowRight,
   Calendar: MdOutlineCalendarToday,
-  Close: MdClose,
+  Close: MdOutlineClose,
+  ChevronLeft: MdOutlineChevronLeft,
+  ChevronRight: MdOutlineChevronRight,
   Settings: MdOutlineSettings,
   Google: (props: ComponentProps<"svg">) => (
     <svg xmlns="http://www.w3.org/2000/svg" height="24" width="24" {...props}>

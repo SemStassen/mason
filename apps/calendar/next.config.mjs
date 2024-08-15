@@ -2,7 +2,7 @@
 const nextConfig = {
   poweredByHeader: false,
   reactStrictMode: true,
-  transpilePackages: ["@mason/ui"],
+  transpilePackages: ["@mason/ui", "@mason/supabase"],
   eslint: {
     ignoreDuringBuilds: true,
   },

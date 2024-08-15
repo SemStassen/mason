@@ -1,6 +1,6 @@
 import type { Client } from "../types";
 
-export async function createUser(supabase: Client, data: any) {
+export async function updateProfile(supabase: Client, data: any) {
   const {
     data: { session },
   } = await supabase.auth.getSession();
@@ -10,8 +10,8 @@ export async function createUser(supabase: Client, data: any) {
   }
 
   return supabase
-    .from("users")
-    .insert(data)
+    .from("profiles")
+    .update(data)
     .eq("id", session.user.id)
     .select()
     .single();

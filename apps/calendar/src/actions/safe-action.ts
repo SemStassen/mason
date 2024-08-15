@@ -1,5 +1,5 @@
 import { logger } from "@/utils/logger";
-import { getUser } from "@mason/supabase/cached-queries";
+import { getProfile } from "@mason/supabase/cached-queries";
 import { createClient } from "@mason/supabase/server";
 import {
   DEFAULT_SERVER_ERROR_MESSAGE,
@@ -47,16 +47,16 @@ export const authActionClient = actionClientWithMeta
     return result;
   })
   .use(async ({ next }) => {
-    const user = await getUser();
+    const profile = await getProfile();
     const supabase = createClient();
 
-    if (!user?.data) {
+    if (!profile?.data) {
       throw new Error("Unauthorized");
     }
 
     return await next({
       ctx: {
-        user: user.data,
+        user: profile.data,
         supabase,
       },
     });

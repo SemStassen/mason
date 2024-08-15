@@ -28,10 +28,11 @@ export const getProfile = async () => {
     async () => {
       return getProfileQuery(supabase, userId);
     },
-    // ["user", userId],
-    // {
-    //   tags: [`user_${userId}`],
-    //   revalidate: 180,
-    // },
-  )();
+    ["profile", userId],
+    {
+      tags: [`profile_${userId}`],
+      revalidate: 180,
+    },
+    // @ts-ignore
+  )(userId);
 };

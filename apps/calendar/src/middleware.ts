@@ -1,7 +1,7 @@
-import { NextResponse, type NextRequest } from "next/server";
 import { updateSession } from "@mason/supabase/middleware";
-import { createI18nMiddleware } from "next-international/middleware";
 import { createClient } from "@mason/supabase/server";
+import { createI18nMiddleware } from "next-international/middleware";
+import { type NextRequest, NextResponse } from "next/server";
 
 const I18nMiddleware = createI18nMiddleware({
   locales: ["en"],
@@ -18,6 +18,7 @@ export async function middleware(request: NextRequest) {
 
   const newURL = new URL(pathnameWithoutLocale || "/", request.url);
 
+  // Fine to use session here because the user is already being checked in the updateSession function
   const {
     data: { session },
   } = await supabase.auth.getSession();
@@ -29,8 +30,8 @@ export async function middleware(request: NextRequest) {
     return NextResponse.redirect(loginURL);
   }
 
-  if (session && newURL.pathname !== "/setup") {
-  }
+  // Maybe check for more user info here and possible redirect to a setup page
+
   return response;
 }
 

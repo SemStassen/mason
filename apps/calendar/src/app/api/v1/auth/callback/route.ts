@@ -11,8 +11,5 @@ export async function GET(request: Request) {
     await supabase.auth.exchangeCodeForSession(code);
   }
 
-  const profile = await getProfile();
-  console.log("profile:", profile);
-
   return NextResponse.redirect(requestUrl.origin);
 }
