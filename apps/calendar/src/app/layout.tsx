@@ -18,7 +18,9 @@ export default function RootLayout({
   return (
     <html lang="en" suppressHydrationWarning>
       <body className={`${GeistSans.variable} ${GeistMono.variable} font-sans`}>
-        {children}
+        <div className="overflow-hidden h-screen w-screen overscroll-x-none">
+          {children}
+        </div>
         <Toaster />
       </body>
     </html>

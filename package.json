@@ -20,5 +20,9 @@
     "turbo": "^2.0.12",
     "typescript": "^5.4.5"
   },
-  "packageManager": "bun@1.1.21"
+  "packageManager": "bun@1.1.21",
+  "dependencies": {
+    "date-fns": "^3.6.0",
+    "embla-carousel-wheel-gestures": "^8.0.1"
+  }
 }

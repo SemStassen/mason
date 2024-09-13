@@ -1,7 +1,9 @@
 import type { ComponentProps } from "react";
 import {
+  MdOutlineArrowDownward,
   MdOutlineArrowLeft,
   MdOutlineArrowRight,
+  MdOutlineArrowUpward,
   MdOutlineCalendarToday,
   MdOutlineChevronLeft,
   MdOutlineChevronRight,
@@ -12,6 +14,8 @@ import {
 export const Icons = {
   ArrowLeft: MdOutlineArrowLeft,
   ArrowRight: MdOutlineArrowRight,
+  ArrowUp: MdOutlineArrowUpward,
+  ArrowDown: MdOutlineArrowDownward,
   Calendar: MdOutlineCalendarToday,
   Close: MdOutlineClose,
   ChevronLeft: MdOutlineChevronLeft,
