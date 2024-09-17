@@ -18,8 +18,8 @@ const items = [
 ];
 
 const icons = {
-  "/": () => <Icons.Calendar size={22} />,
-  "/settings": () => <Icons.Settings size={22} />,
+  "/": () => <Icons.Calendar size={22} fill="inherit" />,
+  "/settings": () => <Icons.Settings size={22} fill="inherit" />,
 };
 
 interface itemProps {
@@ -34,7 +34,7 @@ function Item({ item, isActive }: itemProps) {
   const Icon = icons[item.path];
   return (
     <Button
-      className={cn(isActive && "border-accent border")}
+      className={cn("fill-muted-foreground", isActive && "fill-white bg-muted")}
       variant="ghost"
       asChild
     >

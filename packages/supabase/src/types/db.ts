@@ -38,6 +38,35 @@ export type Database = {
           },
         ]
       }
+      timeEntries: {
+        Row: {
+          id: number
+          startedAt: string
+          stoppedAt: string
+          userId: string
+        }
+        Insert: {
+          id?: number
+          startedAt: string
+          stoppedAt: string
+          userId: string
+        }
+        Update: {
+          id?: number
+          startedAt?: string
+          stoppedAt?: string
+          userId?: string
+        }
+        Relationships: [
+          {
+            foreignKeyName: "timeEntries_userId_fkey"
+            columns: ["userId"]
+            isOneToOne: false
+            referencedRelation: "users"
+            referencedColumns: ["id"]
+          },
+        ]
+      }
     }
     Views: {
       [_ in never]: never

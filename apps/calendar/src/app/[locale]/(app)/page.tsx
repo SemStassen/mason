@@ -4,7 +4,7 @@ import { Icons } from "@mason/ui/icons";
 
 export default function Home() {
   return (
-    <div className="flex flex-col flex-1 overflow-x-hidden">
+    <div className="flex flex-col w-full">
       <header className="px-3 h-11 shrink-0 flex items-center border-b border-muted">
         <div className="flex gap-1.5 items-center">
           <div className="flex gap-1 text-sm">
