@@ -1,5 +1,6 @@
 import type { ComponentProps } from "react";
 import {
+  MdBusiness,
   MdDeleteOutline,
   MdOutlineArrowDownward,
   MdOutlineArrowLeft,
@@ -63,6 +64,7 @@ export const Icons = {
     </svg>
   ),
   Note: MdOutlineNote,
+  Organization: MdBusiness,
   Search: MdOutlineSearch,
   Settings: MdOutlineSettings,
   Suitcase: PiSuitcase,

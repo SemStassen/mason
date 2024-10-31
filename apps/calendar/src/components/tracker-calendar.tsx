@@ -1,5 +1,6 @@
 "use client";
 
+import { TimeEntry } from "@/components/time-entry";
 import { useTrackerStore } from "@/stores/tracker-store";
 import { useUserPreferencesStore } from "@/stores/user-preferences-store";
 import { convertToLocalDate } from "@/utils/dates";
@@ -15,7 +16,6 @@ import {
   startOfDay,
 } from "date-fns";
 import { type ReactNode, useEffect, useRef, useState } from "react";
-import { TimeEntry } from "./time-entry";
 
 const TrackerCalendar = ({
   timeEntries,

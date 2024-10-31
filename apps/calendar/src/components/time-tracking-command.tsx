@@ -9,7 +9,6 @@ import {
   CommandInput,
   CommandItem,
   CommandList,
-  CommandSeparator,
 } from "@mason/ui/command";
 import { DialogDescription, DialogTitle } from "@mason/ui/dialog";
 import { Icons } from "@mason/ui/icons";

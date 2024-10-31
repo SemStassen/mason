@@ -55,7 +55,6 @@ export function TimeEntryForm({
   note,
 }: TimeEntryFormProps) {
   const { projects } = useProjectsStore();
-  const { setSelectedTimeEntryUuid } = useTrackerStore();
 
   const { toast } = useToast();
   const action = useAction(updateTimeEntryAction, {

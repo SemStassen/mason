@@ -3,7 +3,7 @@
 import * as RadioGroupPrimitive from "@radix-ui/react-radio-group";
 import * as React from "react";
 
-import { cn } from "@/utils";
+import { cn } from "../utils";
 import { Icons } from "./icons";
 
 const RadioGroup = React.forwardRef<

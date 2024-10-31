@@ -1,11 +1,11 @@
 "use client";
 
+import { TimeEntryForm } from "@/components/forms/time-entry-form";
+import { TrackerCalendar } from "@/components/tracker-calendar";
+import { TrackerHeader } from "@/components/tracker-header";
 import { useTrackerStore } from "@/stores/tracker-store";
 import { AnimatePresence } from "framer-motion";
 import { motion } from "framer-motion";
-import { TimeEntryForm } from "./forms/time-entry-form";
-import { TrackerCalendar } from "./tracker-calendar";
-import { TrackerHeader } from "./tracker-header";
 
 interface TrackerProps {
   timeEntries: {

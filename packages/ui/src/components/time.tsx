@@ -1,7 +1,6 @@
 "use client";
 
-import { cn } from "@/utils";
-import * as React from "react";
+import { cn } from "../utils";
 import { Button } from "./button";
 import { Icons } from "./icons";
 
