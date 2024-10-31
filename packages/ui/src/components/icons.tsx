@@ -1,15 +1,31 @@
 import type { ComponentProps } from "react";
 import {
+  MdDeleteOutline,
   MdOutlineArrowDownward,
   MdOutlineArrowLeft,
   MdOutlineArrowRight,
   MdOutlineArrowUpward,
   MdOutlineCalendarToday,
-  MdOutlineChevronLeft,
-  MdOutlineChevronRight,
+  MdOutlineCheck,
   MdOutlineClose,
+  MdOutlineMoreHoriz,
+  MdOutlineNote,
+  MdOutlineSearch,
   MdOutlineSettings,
+  MdOutlineTimer,
+  MdOutlineViewSidebar,
 } from "react-icons/md";
+
+import {
+  FiChevronDown,
+  FiChevronLeft,
+  FiChevronRight,
+  FiChevronUp,
+} from "react-icons/fi";
+
+import { RxDotFilled } from "react-icons/rx";
+
+import { PiSuitcase } from "react-icons/pi";
 
 export const Icons = {
   ArrowLeft: MdOutlineArrowLeft,
@@ -17,10 +33,15 @@ export const Icons = {
   ArrowUp: MdOutlineArrowUpward,
   ArrowDown: MdOutlineArrowDownward,
   Calendar: MdOutlineCalendarToday,
+  Check: MdOutlineCheck,
+  Clock: MdOutlineTimer,
   Close: MdOutlineClose,
-  ChevronLeft: MdOutlineChevronLeft,
-  ChevronRight: MdOutlineChevronRight,
-  Settings: MdOutlineSettings,
+  ChevronDown: FiChevronDown,
+  ChevronLeft: FiChevronLeft,
+  ChevronRight: FiChevronRight,
+  ChevronUp: FiChevronUp,
+  DotFilled: RxDotFilled,
+  DotsHorizontal: MdOutlineMoreHoriz,
   Google: (props: ComponentProps<"svg">) => (
     <svg xmlns="http://www.w3.org/2000/svg" height="24" width="24" {...props}>
       <path
@@ -41,4 +62,10 @@ export const Icons = {
       />
     </svg>
   ),
+  Note: MdOutlineNote,
+  Search: MdOutlineSearch,
+  Settings: MdOutlineSettings,
+  Suitcase: PiSuitcase,
+  Trash: MdDeleteOutline,
+  ViewSidebar: MdOutlineViewSidebar,
 };

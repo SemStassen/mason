@@ -1,125 +1,71 @@
 "use client";
 
-import { cn } from "@mason/ui/cn";
-import { useState } from "react";
-import { TrackerActivity } from "./tracker-activity";
+import { useTrackerStore } from "@/stores/tracker-store";
+import { AnimatePresence } from "framer-motion";
+import { motion } from "framer-motion";
+import { TimeEntryForm } from "./forms/time-entry-form";
+import { TrackerCalendar } from "./tracker-calendar";
+import { TrackerHeader } from "./tracker-header";
 
-export function Tracker() {
-  const [isScrolling, setIsScrolling] = useState(false);
+interface TrackerProps {
+  timeEntries: {
+    uuid: string;
+    project: {
+      uuid: string;
+      name: string;
+      hexColor: string;
+    } | null;
+    userUuid: string;
+    startedAt: string;
+    stoppedAt: string;
+    note: string | null;
+  }[];
+}
+
+function Tracker({ timeEntries }: TrackerProps) {
+  const selectedTimeEntryUuid = useTrackerStore(
+    (state) => state.selectedTimeEntryUuid,
+  );
+
+  const selectedTimeEntry = timeEntries.find(
+    (t) => t.uuid === selectedTimeEntryUuid,
+  );
 
   return (
-    <div
-      className="[scrollbar-width:none] [&::-webkit-scrollbar]:hidden overflow-auto snap-x snap-mandatory h-full scroll-ps-16"
-      onFocus={(f) => {
-        console.log(f);
-      }}
-      onScroll={(e) => {
-        if (!isScrolling) {
-          setIsScrolling(true);
-        }
-        clearTimeout((e.currentTarget as any).scrollTimer);
-        (e.currentTarget as any).scrollTimer = setTimeout(() => {
-          if (document.activeElement === e.currentTarget) {
-            setIsScrolling(false);
-          }
-        }, 150);
-      }}
-    >
-      <div className="relative isolate w-[calc(2000%_-_calc(62px_*_20))]">
-        {/* DAY SCROLL SNAPPING */}
-        <div
-          className={cn(
-            "absolute inset-0 grid auto-cols-fr grid-flow-col ml-16",
-            isScrolling && "[&_>_*]:snap-start",
-          )}
-        >
-          <div />
-          <div />
-          <div />
-          <div />
-          <div />
-          <div />
-          <div />
-          <div />
-          <div />
-          <div />
-          <div />
-          <div />
-          <div />
-          <div />
-          <div />
-          <div />
-          <div />
-          <div />
-          <div />
-          <div />
+    <>
+      <TrackerHeader />
+      <div className="w-full h-full flex overflow-auto">
+        <div className="w-full h-full">
+          <TrackerCalendar timeEntries={timeEntries} />
         </div>
-        {/* TOPBAR DAYS */}
-        <div className="sticky top-0 inset-0 z-20">
-          <div className="sticky left-0 size-0 z-30">
-            <div className="h-10 w-16 bg-muted">+</div>
-          </div>
-          <div className="relative overflow-hidden bg-background ml-16 h-10">
-            {Array.from({ length: 20 }).map((_, index) => (
-              <div
-                key={index}
-                className="absolute top-0 h-full flex items-center justify-center"
-                style={{
-                  width: "5%",
-                  left: `${index * 5}%`,
-                }}
-              >
-                day: {index + 1}
-              </div>
-            ))}
-          </div>
-        </div>
-        <div className="sticky left-0 size-0 z-10">
-          <div className="relative h-[2000px] w-16 flex flex-col border-r border-muted bg-background">
-            {Array.from({ length: 24 }).map((_, index) => {
-              if (index === 0) {
-                return;
-              }
-              return (
-                <div
-                  key={index}
-                  className="absolute inset-x-0 -translate-y-1/2"
-                  style={{
-                    top: `calc(calc(100% / 24) * ${index})`,
-                  }}
-                >
-                  <div className="grow text-xs text-muted-foreground text-center">
-                    {index < 9 ? 0 : ""}
-                    {index}:00
-                  </div>
-                </div>
-              );
-            })}
-          </div>
-        </div>
-        {/* HOURLY OVERVIEW */}
-        <div
-          className="relative overflow-hidden h-[2000px] ml-16 mt-10"
-          style={{
-            backgroundSize: "100% calc(100% / 24)",
-            backgroundImage:
-              "linear-gradient(to bottom, hsl(var(--background)) 1px, transparent 1px), repeating-linear-gradient(transparent, transparent calc(calc(100% / 4) - 2px), hsl(var(--background)) calc(100% / 4))",
-          }}
-        >
-          {Array.from({ length: 20 }).map((_, index) => (
-            <div
-              key={index}
-              className="absolute top-0 h-full"
-              style={{
-                width: "5%",
-                left: `${index * 5}%`,
+        <AnimatePresence>
+          {selectedTimeEntryUuid && selectedTimeEntry && (
+            <motion.div
+              initial={{ width: 0 }}
+              transition={{
+                ease: "linear",
+                duration: 0.15,
               }}
+              animate={{ width: 360 }}
+              exit={{ width: 0 }}
             >
-              <TrackerActivity />
-            </div>
-          ))}
-        </div>
+              <div className="w-[360px] p-3 h-full border-l border-muted">
+                <TimeEntryForm
+                  // Add key to force rerender on change
+                  key={selectedTimeEntryUuid}
+                  uuid={selectedTimeEntry.uuid}
+                  projectUuid={selectedTimeEntry.project?.uuid ?? null}
+                  startedAt={selectedTimeEntry.startedAt}
+                  stoppedAt={selectedTimeEntry.stoppedAt}
+                  note={selectedTimeEntry.note}
+                />
+              </div>
+            </motion.div>
+          )}
+        </AnimatePresence>
       </div>
-    </div>
+    </>
   );
 }
+
+export { Tracker };

@@ -1,4 +1,3 @@
-import { getProfile } from "@mason/supabase/cached-queries";
 import { createClient } from "@mason/supabase/server";
 import { NextResponse } from "next/server";
 

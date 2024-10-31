@@ -3,7 +3,13 @@ import "server-only";
 import { unstable_cache } from "next/cache";
 // @ts-ignore <-- This actually works because of next
 import { cache } from "react";
-import { getProfileQuery, getTimeEntriesQuery } from ".";
+import {
+  type GetTimeEntryByRangeParams,
+  getProjectsQuery,
+  getTimeEntriesByRangeQuery,
+  getUserPreferencesQuery,
+  getUserQuery,
+} from ".";
 import { createClient } from "../client/server";
 
 export const getSession = cache(async () => {
@@ -12,13 +18,13 @@ export const getSession = cache(async () => {
   return supabase.auth.getSession();
 });
 
-export const getProfile = async () => {
+export const getUser = async () => {
   const {
     data: { session },
   } = await getSession();
-  const userId = session?.user?.id;
+  const userUuid = session?.user?.id;
 
-  if (!userId) {
+  if (!userUuid) {
     return null;
   }
 
@@ -26,24 +32,24 @@ export const getProfile = async () => {
 
   return unstable_cache(
     async () => {
-      return getProfileQuery(supabase, userId);
+      return getUserQuery(supabase, userUuid);
     },
-    ["profile", userId],
+    ["user", userUuid],
     {
-      tags: [`profile_${userId}`],
+      tags: [`user_${userUuid}`],
       revalidate: 180,
     },
     // @ts-ignore
-  )(userId);
+  )(userUuid);
 };
 
-export const getTimeEntries = async () => {
+export const getUserPreferences = async () => {
   const {
     data: { session },
   } = await getSession();
-  const userId = session?.user?.id;
+  const userUuid = session?.user?.id;
 
-  if (!userId) {
+  if (!userUuid) {
     return null;
   }
 
@@ -51,13 +57,69 @@ export const getTimeEntries = async () => {
 
   return unstable_cache(
     async () => {
-      return getTimeEntriesQuery(supabase, userId);
+      return getUserPreferencesQuery(supabase, userUuid);
     },
-    ["timeEntries", userId],
+    ["user_preferences", userUuid],
     {
-      tags: [`timeEntries_${userId}`],
+      tags: [`user_preferences_${userUuid}`],
       revalidate: 180,
     },
     // @ts-ignore
-  )(userId);
+  )(userUuid);
+};
+
+export const getProjects = async () => {
+  const {
+    data: { session },
+  } = await getSession();
+  const userUuid = session?.user?.id;
+
+  if (!userUuid) {
+    return null;
+  }
+
+  const supabase = createClient();
+
+  return unstable_cache(
+    async () => {
+      return getProjectsQuery(supabase, userUuid);
+    },
+    ["projects", userUuid],
+    {
+      tags: [`projects_${userUuid}`],
+      revalidate: 180,
+    },
+    // @ts-ignore
+  )(userUuid);
+};
+
+export const getTimeEntriesByRange = async (
+  params: Omit<GetTimeEntryByRangeParams, "userUuid">,
+) => {
+  const {
+    data: { session },
+  } = await getSession();
+  const userUuid = session?.user?.id;
+
+  if (!userUuid) {
+    return null;
+  }
+
+  const supabase = createClient();
+
+  return unstable_cache(
+    async () => {
+      return getTimeEntriesByRangeQuery(supabase, {
+        userUuid: userUuid,
+        from: params.from,
+        to: params.to,
+      });
+    },
+    ["time_entries", userUuid],
+    {
+      tags: [`time_entries_${userUuid}`],
+      revalidate: 180,
+    },
+    // @ts-ignore
+  )(userUuid);
 };

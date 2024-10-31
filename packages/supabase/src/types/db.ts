@@ -9,61 +9,206 @@ export type Json =
 export type Database = {
   public: {
     Tables: {
-      profiles: {
+      projects: {
+        Row: {
+          created_at: string
+          hex_color: string
+          name: string
+          uuid: string
+        }
+        Insert: {
+          created_at?: string
+          hex_color: string
+          name: string
+          uuid?: string
+        }
+        Update: {
+          created_at?: string
+          hex_color?: string
+          name?: string
+          uuid?: string
+        }
+        Relationships: []
+      }
+      teams: {
+        Row: {
+          created_at: string
+          name: string | null
+          uuid: string
+        }
+        Insert: {
+          created_at?: string
+          name?: string | null
+          uuid?: string
+        }
+        Update: {
+          created_at?: string
+          name?: string | null
+          uuid?: string
+        }
+        Relationships: []
+      }
+      time_entries: {
+        Row: {
+          note: string | null
+          project_uuid: string
+          started_at: string
+          stopped_at: string
+          user_uuid: string
+          uuid: string
+        }
+        Insert: {
+          note?: string | null
+          project_uuid: string
+          started_at: string
+          stopped_at: string
+          user_uuid: string
+          uuid?: string
+        }
+        Update: {
+          note?: string | null
+          project_uuid?: string
+          started_at?: string
+          stopped_at?: string
+          user_uuid?: string
+          uuid?: string
+        }
+        Relationships: [
+          {
+            foreignKeyName: "time_entries_project_uuid_fkey"
+            columns: ["project_uuid"]
+            isOneToOne: false
+            referencedRelation: "projects"
+            referencedColumns: ["uuid"]
+          },
+          {
+            foreignKeyName: "time_entries_user_uuid_fkey"
+            columns: ["user_uuid"]
+            isOneToOne: false
+            referencedRelation: "users"
+            referencedColumns: ["uuid"]
+          },
+        ]
+      }
+      user_preferences: {
+        Row: {
+          created_at: string
+          user_uuid: string
+          week_starts_on_monday: boolean
+        }
+        Insert: {
+          created_at?: string
+          user_uuid: string
+          week_starts_on_monday?: boolean
+        }
+        Update: {
+          created_at?: string
+          user_uuid?: string
+          week_starts_on_monday?: boolean
+        }
+        Relationships: [
+          {
+            foreignKeyName: "user_preferences_user_uuid_fkey"
+            columns: ["user_uuid"]
+            isOneToOne: true
+            referencedRelation: "users"
+            referencedColumns: ["uuid"]
+          },
+        ]
+      }
+      users: {
         Row: {
           created_at: string
           email: string
-          id: string
           username: string
+          uuid: string
         }
         Insert: {
           created_at?: string
           email: string
-          id?: string
           username: string
+          uuid?: string
         }
         Update: {
           created_at?: string
           email?: string
-          id?: string
           username?: string
+          uuid?: string
+        }
+        Relationships: []
+      }
+      users_on_projects: {
+        Row: {
+          created_at: string
+          project_uuid: string
+          user_uuid: string
+          uuid: string
+        }
+        Insert: {
+          created_at?: string
+          project_uuid: string
+          user_uuid: string
+          uuid?: string
+        }
+        Update: {
+          created_at?: string
+          project_uuid?: string
+          user_uuid?: string
+          uuid?: string
         }
         Relationships: [
           {
-            foreignKeyName: "profiles_id_fkey"
-            columns: ["id"]
+            foreignKeyName: "users_on_projects_project_uuid_fkey"
+            columns: ["project_uuid"]
             isOneToOne: true
+            referencedRelation: "projects"
+            referencedColumns: ["uuid"]
+          },
+          {
+            foreignKeyName: "users_on_projects_user_uuid_fkey"
+            columns: ["user_uuid"]
+            isOneToOne: false
             referencedRelation: "users"
-            referencedColumns: ["id"]
+            referencedColumns: ["uuid"]
           },
         ]
       }
-      timeEntries: {
+      users_on_teams: {
         Row: {
-          id: number
-          startedAt: string
-          stoppedAt: string
-          userId: string
+          created_at: string
+          name: string | null
+          team_uuid: string
+          user_uuid: string
+          uuid: string
         }
         Insert: {
-          id?: number
-          startedAt: string
-          stoppedAt: string
-          userId: string
+          created_at?: string
+          name?: string | null
+          team_uuid: string
+          user_uuid: string
+          uuid?: string
         }
         Update: {
-          id?: number
-          startedAt?: string
-          stoppedAt?: string
-          userId?: string
+          created_at?: string
+          name?: string | null
+          team_uuid?: string
+          user_uuid?: string
+          uuid?: string
         }
         Relationships: [
           {
-            foreignKeyName: "timeEntries_userId_fkey"
-            columns: ["userId"]
+            foreignKeyName: "users_on_teams_team_uuid_fkey"
+            columns: ["team_uuid"]
+            isOneToOne: false
+            referencedRelation: "teams"
+            referencedColumns: ["uuid"]
+          },
+          {
+            foreignKeyName: "users_on_teams_user_uuid_fkey"
+            columns: ["user_uuid"]
             isOneToOne: false
             referencedRelation: "users"
-            referencedColumns: ["id"]
+            referencedColumns: ["uuid"]
           },
         ]
       }
@@ -163,4 +308,19 @@ export type Enums<
   ? Database[PublicEnumNameOrOptions["schema"]]["Enums"][EnumName]
   : PublicEnumNameOrOptions extends keyof PublicSchema["Enums"]
     ? PublicSchema["Enums"][PublicEnumNameOrOptions]
+    : never
+
+export type CompositeTypes<
+  PublicCompositeTypeNameOrOptions extends
+    | keyof PublicSchema["CompositeTypes"]
+    | { schema: keyof Database },
+  CompositeTypeName extends PublicCompositeTypeNameOrOptions extends {
+    schema: keyof Database
+  }
+    ? keyof Database[PublicCompositeTypeNameOrOptions["schema"]]["CompositeTypes"]
+    : never = never,
+> = PublicCompositeTypeNameOrOptions extends { schema: keyof Database }
+  ? Database[PublicCompositeTypeNameOrOptions["schema"]]["CompositeTypes"][CompositeTypeName]
+  : PublicCompositeTypeNameOrOptions extends keyof PublicSchema["CompositeTypes"]
+    ? PublicSchema["CompositeTypes"][PublicCompositeTypeNameOrOptions]
     : never

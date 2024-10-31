@@ -132,15 +132,24 @@ FormControl.displayName = "FormControl";
 
 const FormDescription = React.forwardRef<
   HTMLParagraphElement,
-  React.HTMLAttributes<HTMLParagraphElement>
->(({ className, ...props }, ref) => {
-  const { formDescriptionId } = useFormField();
+  React.HTMLAttributes<HTMLParagraphElement> & {
+    hideOnError?: boolean;
+  }
+>(({ className, hideOnError = true, ...props }, ref) => {
+  const { formDescriptionId, error } = useFormField();
+
+  const isHidden = Boolean(hideOnError && error);
 
   return (
     <p
       ref={ref}
       id={formDescriptionId}
-      className={cn("text-sm text-muted-foreground", className)}
+      className={cn(
+        "text-sm text-muted-foreground",
+        isHidden && "hidden",
+        className,
+      )}
+      aria-hidden={isHidden}
       {...props}
     />
   );

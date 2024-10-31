@@ -8,6 +8,7 @@ export default {
     fontSize: {
       xs: ["0.75rem", { lineHeight: "1rem" }],
       sm: ["0.875rem", { lineHeight: "1.125rem" }],
+      base: ["1rem", { lineHeight: "1.25rem" }],
     },
     extend: {
       colors: {

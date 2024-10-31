@@ -1,7 +1,7 @@
 "use client";
 
 import { type UpdateUserSchemaType, updateUserSchema } from "@/actions/schema";
-import { updateProfileAction } from "@/actions/update-profile-action";
+import { updateUserAction } from "@/actions/update-user-action";
 import { zodResolver } from "@hookform/resolvers/zod";
 import { Button } from "@mason/ui/button";
 import {
@@ -19,9 +19,9 @@ import { useToast } from "@mason/ui/use-toast";
 import { useAction } from "next-safe-action/hooks";
 import { useForm } from "react-hook-form";
 
-export function ProfileForm({ username }: { username: string }) {
+export function UserForm({ username }: { username: string }) {
   const { toast } = useToast();
-  const action = useAction(updateProfileAction, {
+  const action = useAction(updateUserAction, {
     onSuccess: () => {
       toast({ title: "Profile updated succesfully!" });
     },
@@ -75,6 +75,7 @@ export function ProfileForm({ username }: { username: string }) {
               <div className="flex flex-col gap-0.5">
                 <FormLabel>Username</FormLabel>
                 <FormDescription>Max. 32 characters</FormDescription>
+                <FormMessage />
               </div>
               <FormControl {...field}>
                 <Input
@@ -86,7 +87,6 @@ export function ProfileForm({ username }: { username: string }) {
                   maxLength={32}
                 />
               </FormControl>
-              <FormMessage />
             </FormItem>
           )}
         />
