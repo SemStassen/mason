@@ -1,7 +1,12 @@
 "use client";
 
+import { signOutAction } from "@/actions/sign-out-action";
+import { startTimeTrackingAction } from "@/actions/start-time-tracking-action";
+import { stopTimeTrackingAction } from "@/actions/stop-time-tracking";
 import { useProjectsStore } from "@/stores/projects-store";
 import { useSidebarStore } from "@/stores/sidebar-store";
+import { useTimeEntriesStore } from "@/stores/time-entries-store";
+import { Badge } from "@mason/ui/badge";
 import {
   CommandDialog,
   CommandEmpty,
@@ -12,18 +17,26 @@ import {
 } from "@mason/ui/command";
 import { DialogDescription, DialogTitle } from "@mason/ui/dialog";
 import { Icons } from "@mason/ui/icons";
+import { useAction } from "next-safe-action/hooks";
 import { useRouter } from "next/navigation";
 import { useState } from "react";
 import { useHotkeys } from "react-hotkeys-hook";
+import { CurrentlyTrackingBadge } from "./currently-tracking-badge";
 
-function TimeTrackingCommand() {
+function AppCommand() {
+  const signOut = useAction(signOutAction);
+  const startTimeTracking = useAction(startTimeTrackingAction);
+  const stopTimeTracking = useAction(stopTimeTrackingAction);
   const toggleIsSidebarOpen = useSidebarStore(
     (state) => state.toggleIsSidebarOpen,
   );
   const projects = useProjectsStore((state) => state.projects);
+  const currentlyTrackingTimeEntry = useTimeEntriesStore(
+    (state) => state.currentlyTrackingTimeEntry,
+  );
 
   const [isCommandModalOpen, setIsCommandModalOpen] = useState<boolean>(false);
-  const [isTrackingModalOpen, setIsTrackingModalOpen] =
+  const [isStartTrackingModalOpen, setIsStartTrackingModalOpen] =
     useState<boolean>(false);
 
   const router = useRouter();
@@ -50,14 +63,34 @@ function TimeTrackingCommand() {
         <CommandList>
           <CommandEmpty>No results found.</CommandEmpty>
           <CommandGroup heading="Tracker">
-            <CommandItem
-              onSelect={() =>
-                handleCommandAction(() => setIsTrackingModalOpen(true))
-              }
-            >
-              <Icons.Clock />
-              <span>Start tracking</span>
-            </CommandItem>
+            {currentlyTrackingTimeEntry ? (
+              <CommandItem
+                value="Stop tracking"
+                keywords={[currentlyTrackingTimeEntry.project.name]}
+                onSelect={() =>
+                  handleCommandAction(() =>
+                    stopTimeTracking.execute({
+                      uuid: currentlyTrackingTimeEntry.uuid,
+                      stoppedAt: new Date().toISOString(),
+                    }),
+                  )
+                }
+              >
+                <Icons.Clock />
+                <span>Stop tracking</span>
+                <Badge>{currentlyTrackingTimeEntry.project.name}</Badge>
+              </CommandItem>
+            ) : (
+              <CommandItem
+                value="Start tracking"
+                onSelect={() =>
+                  handleCommandAction(() => setIsStartTrackingModalOpen(true))
+                }
+              >
+                <Icons.Clock />
+                <span>Start tracking</span>
+              </CommandItem>
+            )}
           </CommandGroup>
           <CommandGroup heading="Navigation">
             <CommandItem
@@ -68,6 +101,15 @@ function TimeTrackingCommand() {
               <span>Go to tracker</span>
             </CommandItem>
             <CommandItem
+              value="Go to organization"
+              onSelect={() =>
+                handleCommandAction(() => router.push("/organization"))
+              }
+            >
+              <Icons.Organization />
+              <span>Go to organization</span>
+            </CommandItem>
+            <CommandItem
               value="Go to settings"
               onSelect={() =>
                 handleCommandAction(() => router.push("/settings"))
@@ -75,6 +117,14 @@ function TimeTrackingCommand() {
             >
               <Icons.Settings />
               <span>Go to settings</span>
+            </CommandItem>
+          </CommandGroup>
+          <CommandGroup heading="Miscellaneous">
+            <CommandItem
+              onSelect={() => handleCommandAction(() => signOut.execute())}
+            >
+              <Icons.SignOut />
+              <span>Sign out</span>
             </CommandItem>
             <CommandItem
               value="Toggle Sidebar"
@@ -101,8 +151,8 @@ function TimeTrackingCommand() {
       </CommandDialog>
 
       <CommandDialog
-        open={isTrackingModalOpen}
-        onOpenChange={setIsTrackingModalOpen}
+        open={isStartTrackingModalOpen}
+        onOpenChange={setIsStartTrackingModalOpen}
       >
         <DialogTitle className="sr-only">Start Tracking</DialogTitle>
         <DialogDescription className="sr-only">
@@ -116,7 +166,13 @@ function TimeTrackingCommand() {
               <CommandItem
                 key={project.uuid}
                 onSelect={() =>
-                  handleCommandAction(() => setIsTrackingModalOpen(true))
+                  handleCommandAction(() => {
+                    startTimeTracking.execute({
+                      projectUuid: project.uuid,
+                      startedAt: new Date().toISOString(),
+                    });
+                    setIsStartTrackingModalOpen(false);
+                  })
                 }
               >
                 <Icons.DotFilled color={project.hexColor} />
@@ -130,4 +186,4 @@ function TimeTrackingCommand() {
   );
 }
 
-export { TimeTrackingCommand };
+export { AppCommand };

@@ -4,6 +4,7 @@ import {
   differenceInMinutes,
   format,
   formatDuration,
+  getHours,
   getMinutes,
   parseISO,
 } from "date-fns";
@@ -18,8 +19,18 @@ function convertToLocalDate(isoString: string) {
 
 // Common date formatting functions
 const formatters = {
-  time: (date: Date | string) =>
-    format(typeof date === "string" ? parseISO(date) : date, "HH:mm"),
+  time: (date: Date | string, timeFormat: "12h" | "24h") => {
+    const formatString =
+      timeFormat === "12h"
+        ? getMinutes(date) === 0
+          ? "ha"
+          : "h:mma"
+        : "HH:mm";
+    return format(
+      typeof date === "string" ? parseISO(date) : date,
+      formatString,
+    );
+  },
   date: (date: Date | string) =>
     format(typeof date === "string" ? parseISO(date) : date, "yyyy-MM-dd"),
   duration: (duration: Duration) =>
@@ -38,9 +49,9 @@ function calculateDuration(startDate: Date, endDate: Date) {
   };
 }
 
-function getDayProgressPercentage(date: Date) {
+function calculateDayProgressPercentage(date: Date) {
   const totalDayMinutes = 24 * 60;
-  const elapsedMinutes = getMinutes(date);
+  const elapsedMinutes = getMinutes(date) + getHours(date) * 60;
 
   return (elapsedMinutes / totalDayMinutes) * 100;
 }
@@ -50,5 +61,5 @@ export {
   isISODateString,
   convertToLocalDate,
   formatters,
-  getDayProgressPercentage,
+  calculateDayProgressPercentage,
 };

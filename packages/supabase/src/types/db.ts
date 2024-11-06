@@ -30,30 +30,12 @@ export type Database = {
         }
         Relationships: []
       }
-      teams: {
-        Row: {
-          created_at: string
-          name: string | null
-          uuid: string
-        }
-        Insert: {
-          created_at?: string
-          name?: string | null
-          uuid?: string
-        }
-        Update: {
-          created_at?: string
-          name?: string | null
-          uuid?: string
-        }
-        Relationships: []
-      }
       time_entries: {
         Row: {
           note: string | null
           project_uuid: string
           started_at: string
-          stopped_at: string
+          stopped_at: string | null
           user_uuid: string
           uuid: string
         }
@@ -61,7 +43,7 @@ export type Database = {
           note?: string | null
           project_uuid: string
           started_at: string
-          stopped_at: string
+          stopped_at?: string | null
           user_uuid: string
           uuid?: string
         }
@@ -69,7 +51,7 @@ export type Database = {
           note?: string | null
           project_uuid?: string
           started_at?: string
-          stopped_at?: string
+          stopped_at?: string | null
           user_uuid?: string
           uuid?: string
         }
@@ -94,16 +76,19 @@ export type Database = {
         Row: {
           created_at: string
           user_uuid: string
+          uses_24_hour_clock: boolean
           week_starts_on_monday: boolean
         }
         Insert: {
           created_at?: string
           user_uuid: string
+          uses_24_hour_clock?: boolean
           week_starts_on_monday?: boolean
         }
         Update: {
           created_at?: string
           user_uuid?: string
+          uses_24_hour_clock?: boolean
           week_starts_on_monday?: boolean
         }
         Relationships: [
@@ -166,45 +151,6 @@ export type Database = {
           },
           {
             foreignKeyName: "users_on_projects_user_uuid_fkey"
-            columns: ["user_uuid"]
-            isOneToOne: false
-            referencedRelation: "users"
-            referencedColumns: ["uuid"]
-          },
-        ]
-      }
-      users_on_teams: {
-        Row: {
-          created_at: string
-          name: string | null
-          team_uuid: string
-          user_uuid: string
-          uuid: string
-        }
-        Insert: {
-          created_at?: string
-          name?: string | null
-          team_uuid: string
-          user_uuid: string
-          uuid?: string
-        }
-        Update: {
-          created_at?: string
-          name?: string | null
-          team_uuid?: string
-          user_uuid?: string
-          uuid?: string
-        }
-        Relationships: [
-          {
-            foreignKeyName: "users_on_teams_team_uuid_fkey"
-            columns: ["team_uuid"]
-            isOneToOne: false
-            referencedRelation: "teams"
-            referencedColumns: ["uuid"]
-          },
-          {
-            foreignKeyName: "users_on_teams_user_uuid_fkey"
             columns: ["user_uuid"]
             isOneToOne: false
             referencedRelation: "users"

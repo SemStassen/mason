@@ -23,9 +23,10 @@ import { useForm } from "react-hook-form";
 
 export function UserPreferencesForm({
   weekStartsOnMonday,
-}: { weekStartsOnMonday: boolean }) {
+  uses24HourClock,
+}: { weekStartsOnMonday: boolean; uses24HourClock: boolean }) {
   const { toast } = useToast();
-  const action = useAction(updateUserPreferencesAction, {
+  const updateAction = useAction(updateUserPreferencesAction, {
     onSuccess: () => {
       toast({ title: "Preferences updated succesfully!" });
     },
@@ -50,12 +51,14 @@ export function UserPreferencesForm({
     resolver: zodResolver(updateUserPreferencesSchema),
     defaultValues: {
       weekStartsOnMonday: weekStartsOnMonday,
+      uses24HourClock: uses24HourClock,
     },
   });
 
   const onSubmit = form.handleSubmit((data) => {
-    action.execute({
+    updateAction.execute({
       weekStartsOnMonday: data.weekStartsOnMonday,
+      uses24HourClock: data.uses24HourClock,
     });
   });
 
@@ -84,8 +87,30 @@ export function UserPreferencesForm({
             </FormItem>
           )}
         />
+        <FormField
+          control={form.control}
+          name="uses24HourClock"
+          render={({ field }) => (
+            <FormItem>
+              <div className="flex flex-col gap-0.5">
+                <FormLabel>Time format</FormLabel>
+              </div>
+              <FormControl>
+                <ToggleGroup
+                  type="single"
+                  onValueChange={(val) => field.onChange(val === "24-hour")}
+                  defaultValue={field.value ? "24-hour" : "12-hour"}
+                >
+                  <ToggleGroupItem value="12-hour">12-hour</ToggleGroupItem>
+                  <ToggleGroupItem value="24-hour">24-hour</ToggleGroupItem>
+                </ToggleGroup>
+              </FormControl>
+              <FormMessage />
+            </FormItem>
+          )}
+        />
         <div className="flex justify-end">
-          <Button type="submit" disabled={action.isExecuting}>
+          <Button type="submit" disabled={updateAction.isExecuting}>
             Save
           </Button>
         </div>

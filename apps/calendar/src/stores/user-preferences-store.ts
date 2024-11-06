@@ -2,14 +2,14 @@ import { create } from "zustand";
 
 export interface UserPreferencesState {
   weekStartsOnMonday: boolean;
-  setWeekStartsOnMonday: (val: boolean) => void;
+  uses24HourClock: boolean;
   hydrate: (data: Partial<UserPreferencesState>) => void;
 }
 
 export const useUserPreferencesStore = create<UserPreferencesState>()(
   (set) => ({
     weekStartsOnMonday: false,
-    setWeekStartsOnMonday: (val) => set(() => ({ weekStartsOnMonday: val })),
+    uses24HourClock: false,
     hydrate: (data) => set((state) => ({ ...state, ...data })),
   }),
 );

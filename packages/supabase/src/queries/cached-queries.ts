@@ -5,6 +5,7 @@ import { unstable_cache } from "next/cache";
 import { cache } from "react";
 import {
   type GetTimeEntryByRangeParams,
+  getCurrentlyTrackingTimeEntryQuery,
   getProjectsQuery,
   getTimeEntriesByRangeQuery,
   getUserPreferencesQuery,
@@ -13,7 +14,7 @@ import {
 import { createClient } from "../client/server";
 
 export const getSession = cache(async () => {
-  const supabase = createClient();
+  const supabase = await createClient();
 
   return supabase.auth.getSession();
 });
@@ -28,7 +29,7 @@ export const getUser = async () => {
     return null;
   }
 
-  const supabase = createClient();
+  const supabase = await createClient();
 
   return unstable_cache(
     async () => {
@@ -53,7 +54,7 @@ export const getUserPreferences = async () => {
     return null;
   }
 
-  const supabase = createClient();
+  const supabase = await createClient();
 
   return unstable_cache(
     async () => {
@@ -78,7 +79,7 @@ export const getProjects = async () => {
     return null;
   }
 
-  const supabase = createClient();
+  const supabase = await createClient();
 
   return unstable_cache(
     async () => {
@@ -105,7 +106,7 @@ export const getTimeEntriesByRange = async (
     return null;
   }
 
-  const supabase = createClient();
+  const supabase = await createClient();
 
   return unstable_cache(
     async () => {
@@ -114,6 +115,31 @@ export const getTimeEntriesByRange = async (
         from: params.from,
         to: params.to,
       });
+    },
+    ["time_entries", userUuid],
+    {
+      tags: [`time_entries_${userUuid}`],
+      revalidate: 180,
+    },
+    // @ts-ignore
+  )(userUuid);
+};
+
+export const getCurrentlyTrackingTimeEntry = async () => {
+  const {
+    data: { session },
+  } = await getSession();
+  const userUuid = session?.user?.id;
+
+  if (!userUuid) {
+    return null;
+  }
+
+  const supabase = await createClient();
+
+  return unstable_cache(
+    async () => {
+      return getCurrentlyTrackingTimeEntryQuery(supabase, userUuid);
     },
     ["time_entries", userUuid],
     {

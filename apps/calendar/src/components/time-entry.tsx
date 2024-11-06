@@ -1,4 +1,5 @@
 import { useTrackerStore } from "@/stores/tracker-store";
+import { useUserPreferencesStore } from "@/stores/user-preferences-store";
 import { calculateDuration, formatters } from "@/utils/dates";
 import { cn } from "@mason/ui/cn";
 import { AnimatePresence, motion } from "framer-motion";
@@ -23,6 +24,9 @@ function TimeEntry({
   ...props
 }: TimeEntryProps) {
   const { selectedTimeEntryUuid, setSelectedTimeEntryUuid } = useTrackerStore();
+  const uses24HourClock = useUserPreferencesStore(
+    (state) => state.uses24HourClock,
+  );
   const duration = calculateDuration(startedAt, stoppedAt);
   const isSelected = uuid === selectedTimeEntryUuid;
 
@@ -62,7 +66,8 @@ function TimeEntry({
           {formatters.duration(duration)}
         </time>
         <time className="text-xs text-accent truncate block">
-          {formatters.time(startedAt)} - {formatters.time(stoppedAt)}
+          {formatters.time(startedAt, uses24HourClock ? "24h" : "12h")} -{" "}
+          {formatters.time(stoppedAt, uses24HourClock ? "24h" : "12h")}
         </time>
         {note && <div>{note}</div>}
       </div>

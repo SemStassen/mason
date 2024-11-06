@@ -11,7 +11,7 @@ const I18nMiddleware = createI18nMiddleware({
 
 export async function middleware(request: NextRequest) {
   const response = await updateSession(request, I18nMiddleware(request));
-  const supabase = createClient();
+  const supabase = await createClient();
   const nextURL = request.nextUrl;
 
   const pathnameWithoutLocale = nextURL.pathname.replace(/^\/[a-z]{2}/, "");

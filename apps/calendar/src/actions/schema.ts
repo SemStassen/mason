@@ -17,18 +17,17 @@ export type UpdateUserPreferencesSchemaType = z.input<
 >;
 export const updateUserPreferencesSchema = z.object({
   weekStartsOnMonday: z.boolean(),
+  uses24HourClock: z.boolean(),
 });
 
-export type CreateOrUpdateTimeEntrySchemaType = z.input<
-  typeof createOrUpdateTimeEntrySchema
->;
-export const createOrUpdateTimeEntrySchema = z
+export type UpdateTimeEntrySchemaType = z.input<typeof updateTimeEntrySchema>;
+export const updateTimeEntrySchema = z
   .object({
     uuid: z.string(),
     projectUuid: z.string(),
     startedAt: z.string().datetime({ offset: true }),
     stoppedAt: z.string().datetime({ offset: true }),
-    note: z.string(),
+    note: z.string().optional(),
   })
   .superRefine((val, ctx) => {
     if (new Date(val.startedAt) > new Date(val.stoppedAt)) {
@@ -39,3 +38,16 @@ export const createOrUpdateTimeEntrySchema = z
       });
     }
   });
+
+export type StartTimeTrackingSchemaType = z.input<
+  typeof startTimeTrackingSchema
+>;
+export const startTimeTrackingSchema = z.object({
+  projectUuid: z.string(),
+  startedAt: z.string().datetime({ offset: true }),
+});
+
+export const stopTimeTrackingSchema = z.object({
+  uuid: z.string(),
+  stoppedAt: z.string().datetime({ offset: true }),
+});

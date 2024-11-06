@@ -4,20 +4,23 @@ import { getUser, getUserPreferences } from "@mason/supabase/cached-queries";
 import { notFound } from "next/navigation";
 
 export default async function SettingsPage() {
-  const userRes = await getUser();
-  const userPreferencesRes = await getUserPreferences();
+  const [user, userPreferences] = await Promise.all([
+    getUser(),
+    getUserPreferences(),
+  ]);
 
-  if (!userRes?.data || !userPreferencesRes?.data) {
+  if (!user?.data || !userPreferences?.data) {
     return notFound();
   }
 
   return (
     <div>
       <h2 className="text-2xl font-bold py-8">Profile</h2>
-      <UserForm username={userRes.data.username} />
+      <UserForm username={user.data.username} />
       <h2 className="text-2xl font-bold py-8">Preferences</h2>
       <UserPreferencesForm
-        weekStartsOnMonday={userPreferencesRes.data.weekStartsOnMonday}
+        weekStartsOnMonday={userPreferences.data.weekStartsOnMonday}
+        uses24HourClock={userPreferences.data.uses24HourClock}
       />
     </div>
   );

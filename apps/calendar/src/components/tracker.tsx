@@ -3,32 +3,25 @@
 import { TimeEntryForm } from "@/components/forms/time-entry-form";
 import { TrackerCalendar } from "@/components/tracker-calendar";
 import { TrackerHeader } from "@/components/tracker-header";
+import { useTimeEntriesStore } from "@/stores/time-entries-store";
 import { useTrackerStore } from "@/stores/tracker-store";
 import { AnimatePresence } from "framer-motion";
 import { motion } from "framer-motion";
 
-interface TrackerProps {
-  timeEntries: {
-    uuid: string;
-    project: {
-      uuid: string;
-      name: string;
-      hexColor: string;
-    } | null;
-    userUuid: string;
-    startedAt: string;
-    stoppedAt: string;
-    note: string | null;
-  }[];
-}
+function Tracker() {
+  const { timeEntries, currentlyTrackingTimeEntry } = useTimeEntriesStore(
+    (state) => ({
+      timeEntries: state.timeEntries,
+      currentlyTrackingTimeEntry: state.currentlyTrackingTimeEntry,
+    }),
+  );
 
-function Tracker({ timeEntries }: TrackerProps) {
   const selectedTimeEntryUuid = useTrackerStore(
     (state) => state.selectedTimeEntryUuid,
   );
 
-  const selectedTimeEntry = timeEntries.find(
-    (t) => t.uuid === selectedTimeEntryUuid,
+  const selectedTimeEntry = [currentlyTrackingTimeEntry, ...timeEntries].find(
+    (t) => t?.uuid === selectedTimeEntryUuid,
   );
 
   return (
@@ -36,7 +29,7 @@ function Tracker({ timeEntries }: TrackerProps) {
       <TrackerHeader />
       <div className="w-full h-full flex overflow-auto">
         <div className="w-full h-full">
-          <TrackerCalendar timeEntries={timeEntries} />
+          <TrackerCalendar />
         </div>
         <AnimatePresence>
           {selectedTimeEntryUuid && selectedTimeEntry && (
@@ -54,9 +47,11 @@ function Tracker({ timeEntries }: TrackerProps) {
                   // Add key to force rerender on change
                   key={selectedTimeEntryUuid}
                   uuid={selectedTimeEntry.uuid}
-                  projectUuid={selectedTimeEntry.project?.uuid ?? null}
+                  projectUuid={selectedTimeEntry.project.uuid}
                   startedAt={selectedTimeEntry.startedAt}
-                  stoppedAt={selectedTimeEntry.stoppedAt}
+                  stoppedAt={
+                    selectedTimeEntry?.stoppedAt ?? new Date().toISOString()
+                  }
                   note={selectedTimeEntry.note}
                 />
               </div>

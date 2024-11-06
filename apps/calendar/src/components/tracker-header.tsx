@@ -1,7 +1,10 @@
 "use client";
 
+import { stopTimeTrackingAction } from "@/actions/stop-time-tracking";
 import { useSidebarStore } from "@/stores/sidebar-store";
+import { useTimeEntriesStore } from "@/stores/time-entries-store";
 import { useTrackerStore } from "@/stores/tracker-store";
+import { calculateDuration, formatters } from "@/utils/dates";
 import { Badge } from "@mason/ui/badge";
 import { Button } from "@mason/ui/button";
 import {
@@ -17,6 +20,8 @@ import {
 } from "@mason/ui/dropdown-menu";
 import { Icons } from "@mason/ui/icons";
 import { isSameDay } from "date-fns";
+import { useAction } from "next-safe-action/hooks";
+import { CurrentlyTrackingBadge } from "./currently-tracking-badge";
 function TrackerHeader() {
   const {
     updateDateInViewByDays,
@@ -26,17 +31,28 @@ function TrackerHeader() {
     daysInView,
     setDaysInView,
   } = useTrackerStore();
-  const { isSidebarOpen } = useSidebarStore();
+  const isSidebarOpen = useSidebarStore((state) => state.isSidebarOpen);
+  const currentlyTrackingTimeEntry = useTimeEntriesStore(
+    (state) => state.currentlyTrackingTimeEntry,
+  );
+
+  const stopTracking = useAction(stopTimeTrackingAction);
 
   return (
     <header className="px-3 h-11 shrink-0 flex items-center border-b border-muted justify-between">
-      <div
+      {/* <div
         className="transition-[margin]"
         style={{
-          marginLeft: isSidebarOpen ? 0 : 64,
+          marginLeft: isSidebarOpen ? 0 : 52,
         }}
-      />
-      <div className="flex gap-1.5 items-center">
+      /> */}
+      <div
+        className="flex gap-1.5 items-center flex-1 transition-[margin]"
+        style={{
+          marginLeft: isSidebarOpen ? 0 : 64,
+          marginRight: isSidebarOpen ? 64 : 0,
+        }}
+      >
         <div className="flex gap-1 text-sm">
           <span>Aug</span>
           <span className="text-muted-foreground">/</span>
@@ -74,9 +90,9 @@ function TrackerHeader() {
           </Button>
         )}
       </div>
-      <div className="flex-grow" />
-      <div className="flex items-center gap-2">
-        <Badge>Personal</Badge>
+      <CurrentlyTrackingBadge />
+      <div className="flex items-center gap-2 flex-1 justify-end">
+        <Badge variant="outline">Personal</Badge>
         <DropdownMenu>
           <DropdownMenuTrigger asChild>
             <Button size="icon" variant="ghost">

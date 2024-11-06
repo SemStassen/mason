@@ -48,7 +48,7 @@ export const authActionClient = actionClientWithMeta
   })
   .use(async ({ next }) => {
     const user = await getUser();
-    const supabase = createClient();
+    const supabase = await createClient();
 
     if (!user?.data) {
       throw new Error("Unauthorized");

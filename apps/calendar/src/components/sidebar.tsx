@@ -1,7 +1,7 @@
 "use client";
 
-import { useProjectsStore } from "@/stores/projects-store";
 import { useSidebarStore } from "@/stores/sidebar-store";
+import { useTimeEntriesStore } from "@/stores/time-entries-store";
 import { Button } from "@mason/ui/button";
 import { cn } from "@mason/ui/cn";
 import { Icons } from "@mason/ui/icons";
@@ -15,6 +15,11 @@ const items = [
     name: "Tracker",
     path: "/",
     Icon: () => <Icons.Calendar size={22} fill="inherit" />,
+  },
+  {
+    name: "Organization",
+    path: "/organization",
+    Icon: () => <Icons.Organization size={22} fill="inherit" />,
   },
   {
     name: "Settings",
@@ -57,8 +62,10 @@ function Item({ item, isActive }: itemProps) {
 function Sidebar() {
   const pathname = usePathname();
   const firstPart = pathname.split("/")[1];
-  const { isSidebarOpen } = useSidebarStore();
-  const { projects } = useProjectsStore();
+  const isSidebarOpen = useSidebarStore((state) => state.isSidebarOpen);
+  const currentlyTrackingTimeEntry = useTimeEntriesStore(
+    (state) => state.currentlyTrackingTimeEntry,
+  );
 
   return (
     <AnimatePresence initial={false}>
@@ -71,10 +78,10 @@ function Sidebar() {
             duration: 0.1,
           }}
           initial={{ width: 0 }}
-          animate={{ width: 220 }}
+          animate={{ width: 292 }}
           exit={{ width: 0 }}
         >
-          <div className="bg-background border-r border-muted h-full overflow-hidden flex-none width-[220px]">
+          <div className="bg-background border-r border-muted h-full overflow-hidden flex-none width-[292px]">
             <div className="flex h-full flex-col w-full pt-8 space-y-6 px-2">
               <h1 className="px-3 flex items-center justify-center py-4">
                 <Link href="/">Mason</Link>
@@ -92,13 +99,13 @@ function Sidebar() {
                   })}
                 </ul>
               </nav>
-
-              <div>
-                <h4 className="text-sm">Projects</h4>
-                {projects.map(({ name, uuid }) => (
-                  <div key={uuid}>{name}</div>
-                ))}
-              </div>
+              {currentlyTrackingTimeEntry && (
+                <div>
+                  <div>Currently tracking</div>
+                  project: {currentlyTrackingTimeEntry.project.name}
+                </div>
+              )}
+              {/* <SidebarCalendar /> */}
             </div>
           </div>
         </motion.aside>

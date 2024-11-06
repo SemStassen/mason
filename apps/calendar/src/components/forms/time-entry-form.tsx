@@ -1,12 +1,12 @@
 "use client";
 
+import { deleteTimeEntryAction } from "@/actions/delete-time-entry-action";
 import {
-  type CreateOrUpdateTimeEntrySchemaType,
-  createOrUpdateTimeEntrySchema,
+  type UpdateTimeEntrySchemaType,
+  updateTimeEntrySchema,
 } from "@/actions/schema";
 import { updateTimeEntryAction } from "@/actions/update-time-entry-action";
 import { useProjectsStore } from "@/stores/projects-store";
-import { useTrackerStore } from "@/stores/tracker-store";
 import { convertToLocalDate } from "@/utils/dates";
 import { zodResolver } from "@hookform/resolvers/zod";
 import { Button } from "@mason/ui/button";
@@ -40,9 +40,9 @@ import { useAction } from "next-safe-action/hooks";
 import { useForm } from "react-hook-form";
 
 interface TimeEntryFormProps {
-  uuid: string | null;
-  projectUuid: string | null;
-  startedAt: string | null;
+  uuid: string;
+  projectUuid: string;
+  startedAt: string;
   stoppedAt: string | null;
   note: string | null;
 }
@@ -57,7 +57,28 @@ export function TimeEntryForm({
   const { projects } = useProjectsStore();
 
   const { toast } = useToast();
-  const action = useAction(updateTimeEntryAction, {
+  const deleteAction = useAction(deleteTimeEntryAction, {
+    onSuccess: () => {
+      toast({ title: "Time entry deleted succesfully!" });
+    },
+    onError: () => {
+      toast({
+        variant: "destructive",
+        title: "Failed to delete time entry",
+        action: (
+          <ToastAction
+            altText="Retry"
+            onClick={() => {
+              onSubmit();
+            }}
+          >
+            Retry
+          </ToastAction>
+        ),
+      });
+    },
+  });
+  const updateAction = useAction(updateTimeEntryAction, {
     onSuccess: () => {
       toast({ title: "Time entry updated succesfully!" });
     },
@@ -79,8 +100,8 @@ export function TimeEntryForm({
     },
   });
 
-  const form = useForm<CreateOrUpdateTimeEntrySchemaType>({
-    resolver: zodResolver(createOrUpdateTimeEntrySchema),
+  const form = useForm<UpdateTimeEntrySchemaType>({
+    resolver: zodResolver(updateTimeEntrySchema),
     defaultValues: {
       uuid: uuid ?? undefined,
       projectUuid: projectUuid ?? undefined,
@@ -90,9 +111,14 @@ export function TimeEntryForm({
     },
   });
 
+  const handleDelete = () => {
+    deleteAction.execute({
+      uuid: uuid,
+    });
+  };
+
   const onSubmit = form.handleSubmit((data) => {
-    console.log(data);
-    action.execute({
+    updateAction.execute({
       uuid: data.uuid,
       projectUuid: data.projectUuid,
       startedAt: data.startedAt,
@@ -100,98 +126,92 @@ export function TimeEntryForm({
       note: data.note,
     });
   });
-  console.log(projects);
   return (
     <Form {...form}>
       <form className="relative space-y-4 h-full" onSubmit={onSubmit}>
-        <div className="flex gap-6">
-          <div className="h-10 flex items-center">
-            <Icons.Suitcase />
-          </div>
-          <FormField
-            control={form.control}
-            name="projectUuid"
-            render={({ field }) => (
-              <FormItem className="grow flex flex-col">
-                <FormLabel className="sr-only">Project</FormLabel>
-                <Popover>
-                  <PopoverTrigger asChild>
-                    <FormControl>
-                      <Button
-                        variant="outline"
-                        role="combobox"
-                        className={cn(
-                          "w-full justify-between",
-                          !field.value && "text-muted-foreground",
-                        )}
-                      >
-                        {field.value ? (
-                          <span className="flex items-center gap-2">
-                            <Icons.DotFilled
-                              color={
-                                projects.find(
-                                  (project) => project.uuid === field.value,
-                                )?.hexColor
-                              }
-                            />
-                            {
+        <FormField
+          control={form.control}
+          name="projectUuid"
+          render={({ field }) => (
+            <FormItem className="grow flex flex-col">
+              <FormLabel className="sr-only">Project</FormLabel>
+              <Popover>
+                <PopoverTrigger asChild>
+                  <FormControl>
+                    <Button
+                      variant="outline"
+                      role="combobox"
+                      className={cn(
+                        "w-full justify-between",
+                        !field.value && "text-muted-foreground",
+                      )}
+                    >
+                      {field.value ? (
+                        <span className="flex items-center gap-2">
+                          <Icons.DotFilled
+                            color={
                               projects.find(
                                 (project) => project.uuid === field.value,
-                              )?.name
+                              )?.hexColor
                             }
-                          </span>
-                        ) : (
-                          "Select project"
-                        )}
+                          />
+                          {
+                            projects.find(
+                              (project) => project.uuid === field.value,
+                            )?.name
+                          }
+                        </span>
+                      ) : (
+                        "Select project"
+                      )}
 
-                        <Icons.ChevronDown className="ml-2 h-4 w-4 shrink-0 opacity-50" />
-                      </Button>
-                    </FormControl>
-                  </PopoverTrigger>
-                  <PopoverContent
-                    className="p-0"
-                    style={{
-                      width: "var(--radix-popover-trigger-width)",
-                    }}
-                  >
-                    <Command>
-                      <CommandInput
-                        placeholder="Search project..."
-                        className="h-9"
-                      />
-                      <CommandList>
-                        <CommandEmpty>No project found.</CommandEmpty>
-                        <CommandGroup>
-                          {projects.map((project) => (
-                            <CommandItem
-                              value={project.name}
-                              key={project.uuid}
-                              onSelect={() => {
-                                form.setValue("projectUuid", project.uuid);
-                              }}
-                            >
-                              <Icons.DotFilled color={project.hexColor} />
-                              {project.name}
-                              <Icons.Check
-                                className={cn(
-                                  "ml-auto h-4 w-4",
-                                  project.uuid === field.value
-                                    ? "opacity-100"
-                                    : "opacity-0",
-                                )}
-                              />
-                            </CommandItem>
-                          ))}
-                        </CommandGroup>
-                      </CommandList>
-                    </Command>
-                  </PopoverContent>
-                </Popover>
-                <FormMessage />
-              </FormItem>
-            )}
-          />
-        </div>
+                      <Icons.ChevronDown className="ml-2 h-4 w-4 shrink-0 opacity-50" />
+                    </Button>
+                  </FormControl>
+                </PopoverTrigger>
+                <PopoverContent
+                  className="p-0"
+                  style={{
+                    width: "var(--radix-popover-trigger-width)",
+                  }}
+                >
+                  <Command>
+                    <CommandInput
+                      placeholder="Search project..."
+                      className="h-9"
+                    />
+                    <CommandList>
+                      <CommandEmpty>No project found.</CommandEmpty>
+                      <CommandGroup>
+                        {projects.map((project) => (
+                          <CommandItem
+                            value={project.name}
+                            key={project.uuid}
+                            onSelect={() => {
+                              form.setValue("projectUuid", project.uuid);
+                            }}
+                          >
+                            <Icons.DotFilled color={project.hexColor} />
+                            {project.name}
+                            <Icons.Check
+                              className={cn(
+                                "ml-auto h-4 w-4",
+                                project.uuid === field.value
+                                  ? "opacity-100"
+                                  : "opacity-0",
+                              )}
+                            />
+                          </CommandItem>
+                        ))}
+                      </CommandGroup>
+                    </CommandList>
+                  </Command>
+                </PopoverContent>
+              </Popover>
+              <FormMessage />
+            </FormItem>
+          )}
+        />
         <Separator />
         <div className="flex gap-6">
           <div className="h-10 flex items-center">
@@ -368,7 +388,12 @@ export function TimeEntryForm({
           />
         </div>
         <div className="absolute bottom-0 right-0">
-          <Button type="submit">Save</Button>
+          <div className="flex gap-2">
+            <Button variant="destructive" type="button" onClick={handleDelete}>
+              <Icons.Trash className="w-5 h-5" />
+            </Button>
+            <Button type="submit">Save</Button>
+          </div>
         </div>
       </form>
     </Form>

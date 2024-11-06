@@ -20,11 +20,13 @@ export default async function RootLayout({
     locale: string;
   };
 }>) {
+  const { locale } = await params;
+
   return (
     <html lang="en" suppressHydrationWarning>
       <body className={`${GeistSans.variable} ${GeistMono.variable} font-sans`}>
         <div className="overflow-hidden h-screen w-screen overscroll-x-none">
-          <Providers locale={params.locale}>{children}</Providers>
+          <Providers locale={locale}>{children}</Providers>
         </div>
         <Toaster />
       </body>

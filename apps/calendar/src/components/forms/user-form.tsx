@@ -21,7 +21,7 @@ import { useForm } from "react-hook-form";
 
 export function UserForm({ username }: { username: string }) {
   const { toast } = useToast();
-  const action = useAction(updateUserAction, {
+  const updateAction = useAction(updateUserAction, {
     onSuccess: () => {
       toast({ title: "Profile updated succesfully!" });
     },
@@ -50,7 +50,7 @@ export function UserForm({ username }: { username: string }) {
   });
 
   const onSubmit = form.handleSubmit((data) => {
-    action.execute({
+    updateAction.execute({
       username: data.username,
     });
   });
@@ -91,7 +91,7 @@ export function UserForm({ username }: { username: string }) {
           )}
         />
         <div className="flex justify-end">
-          <Button type="submit" disabled={action.isExecuting}>
+          <Button type="submit" disabled={updateAction.isExecuting}>
             Save
           </Button>
         </div>

@@ -1,9 +1,15 @@
 "use client";
 
 import { TimeEntry } from "@/components/time-entry";
+import { useTimeEntriesStore } from "@/stores/time-entries-store";
+import { useTimerStore } from "@/stores/timer-store";
 import { useTrackerStore } from "@/stores/tracker-store";
 import { useUserPreferencesStore } from "@/stores/user-preferences-store";
-import { convertToLocalDate } from "@/utils/dates";
+import {
+  calculateDayProgressPercentage,
+  convertToLocalDate,
+  formatters,
+} from "@/utils/dates";
 import { cn } from "@mason/ui/cn";
 import {
   addDays,
@@ -17,31 +23,33 @@ import {
 } from "date-fns";
 import { type ReactNode, useEffect, useRef, useState } from "react";
 
-const TrackerCalendar = ({
-  timeEntries,
-}: {
-  timeEntries: Array<{
-    uuid: string;
-    project: {
-      uuid: string;
-      name: string;
-      hexColor: string;
-    } | null;
-    startedAt: string;
-    stoppedAt: string;
-    note: string | null;
-  }>;
-}) => {
-  const convertedTimeEntries = timeEntries.map(
-    ({ startedAt, stoppedAt, ...rest }) => ({
-      startedAt: convertToLocalDate(startedAt),
-      stoppedAt: convertToLocalDate(stoppedAt),
-      ...rest,
+const TrackerCalendar = () => {
+  const { timeEntries, currentlyTrackingTimeEntry } = useTimeEntriesStore(
+    (state) => ({
+      timeEntries: state.timeEntries,
+      currentlyTrackingTimeEntry: state.currentlyTrackingTimeEntry,
     }),
   );
-  const { weekStartsOnMonday } = useUserPreferencesStore();
-  const { currentDate, dateInView, daysInView, currentTime } =
-    useTrackerStore();
+  const convertedTimeEntries = [currentlyTrackingTimeEntry, ...timeEntries]
+    .filter((entry) => entry !== null)
+    .map(({ startedAt, stoppedAt, ...rest }) => ({
+      startedAt: convertToLocalDate(startedAt),
+      stoppedAt: convertToLocalDate(stoppedAt ?? new Date().toISOString()),
+      ...rest,
+    }));
+  const currentTime = useTimerStore((state) => state.currentTime);
+  console.log({ currentTime });
+  const { weekStartsOnMonday, uses24HourClock } = useUserPreferencesStore(
+    (state) => ({
+      weekStartsOnMonday: state.weekStartsOnMonday,
+      uses24HourClock: state.uses24HourClock,
+    }),
+  );
+  const { currentDate, dateInView, daysInView } = useTrackerStore((state) => ({
+    currentDate: state.currentDate,
+    dateInView: state.dateInView,
+    daysInView: state.daysInView,
+  }));
   const daysInViewOffset = Math.floor((daysInView * 7) / 2);
   const dayWidth = 5 / daysInView;
   const dayOffsetToStartOfWeek =
@@ -73,11 +81,17 @@ const TrackerCalendar = ({
         <div className="sticky top-0 inset-0 z-20">
           <div className="sticky left-0 size-0 z-30">
             <div className="h-10 w-16 bg-background flex items-center px-2 gap-2 border-r border-muted">
-              <div>+</div>
-              <div className="text-xs">CET</div>
+              <div className="text-xs">
+                {new Date()
+                  .toLocaleDateString(undefined, {
+                    day: "2-digit",
+                    timeZoneName: "short",
+                  })
+                  .substring(4)}
+              </div>
             </div>
           </div>
-          <div className="relative overflow-hidden bg-background h-[40px] ml-16">
+          <div className="relative overflow-hidden bg-background h-[40px] ml-16 border-b border-muted">
             {Array.from({ length: 7 * daysInView }).map((_, index) => {
               const currentDay = addDays(dateInView, index - daysInViewOffset);
               return (
@@ -103,7 +117,7 @@ const TrackerCalendar = ({
               );
             })}
           </div>
-          <div className="h-6">
+          {/* <div className="h-6">
             <div className="sticky left-0 size-0">
               <div className="w-screen border-y border-muted h-6 bg-background" />
             </div>
@@ -126,6 +140,17 @@ const TrackerCalendar = ({
                 );
               })}
             </div>
+          </div> */}
+        </div>
+        {/* Current time line marker */}
+        <div className="pointer-events-none sticky left-0 z-10 size-0">
+          <div className="relative h-[2000px]">
+            <div
+              className="absolute h-px w-screen bg-red-400/60 transition-[top,opacity]"
+              style={{
+                top: `${calculateDayProgressPercentage(new Date(currentTime)) - 0.05}%`,
+              }}
+            />
           </div>
         </div>
         {/* HOURLY OVERVIEW */}
@@ -135,12 +160,7 @@ const TrackerCalendar = ({
               if (index === 0) {
                 return;
               }
-              const isCurrentTimeClose =
-                Math.abs(
-                  currentTime.getTime() -
-                    new Date(currentTime.setHours(index, 0, 0, 0)).getTime(),
-                ) <=
-                10 * 60 * 1000;
+
               return (
                 <div
                   // biome-ignore lint/suspicious/noArrayIndexKey: not dynamic
@@ -153,27 +173,29 @@ const TrackerCalendar = ({
                   <div
                     className={cn(
                       "grow text-xs text-muted-foreground text-center",
-                      isCurrentTimeClose && "opacity-0",
                     )}
                   >
-                    {index < 9 ? 0 : ""}
-                    {index}:00
+                    {formatters.time(
+                      new Date(0, 0, 0, index),
+                      uses24HourClock ? "24h" : "12h",
+                    )}
                   </div>
                 </div>
               );
             })}
-            {/* <div
+            <div
               className="absolute inset-x-0 -translate-y-1/2"
               style={{
-                top: `${getDayProgressPercentage(currentTime)}%`,
+                top: `${calculateDayProgressPercentage(new Date(currentTime))}%`,
               }}
             >
               <div className="grow text-xs text-destructive text-center">
-                {formatters.time(currentTime)}
+                {formatters.time(currentTime, uses24HourClock ? "24h" : "12h")}
               </div>
-            </div> */}
+            </div>
           </div>
         </div>
+
         <div
           className="relative overflow-hidden h-[2000px] ml-16"
           style={{
@@ -215,6 +237,7 @@ const TrackerCalendar = ({
                             : startedAt;
                         const entryEnd =
                           stoppedAt > currentDayEnd ? currentDayEnd : stoppedAt;
+
                         return (
                           <TimeEntry
                             key={uuid}
@@ -226,7 +249,7 @@ const TrackerCalendar = ({
                             note={note}
                             style={{
                               top: `${((entryStart.getHours() + entryStart.getMinutes() / 60) * 100) / 24}%`,
-                              height: `${((entryEnd.getTime() - entryStart.getTime()) / (1000 * 60 * 60)) * (100 / 24)}%`,
+                              height: `${Math.max(((entryEnd.getTime() - entryStart.getTime()) / (1000 * 60 * 60)) * (100 / 24), 1.04)}%`,
                             }}
                           />
                         );

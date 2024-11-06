@@ -6,8 +6,6 @@ import { createJSONStorage, persist } from "zustand/middleware";
 interface TrackerState {
   daysInView: 1 | 2 | 3 | 4 | 5 | 6 | 7;
   setDaysInView: (mode: TrackerState["daysInView"]) => void;
-  currentTime: Date;
-  setCurrentTime: (date: Date) => void;
   /** The current active date in userland */
   currentDate: Date;
   /** The date that is currently in view */
@@ -31,11 +29,6 @@ export const useTrackerStore = create<TrackerState>()(
           set(() => ({
             daysInView: amount,
           })),
-        currentTime: new TZDate(
-          formatISO(new Date(), { representation: "complete" }),
-          "UTC",
-        ),
-        setCurrentTime: (date) => set(() => ({ currentTime: date })),
         currentDate: new TZDate(
           formatISO(new Date(), { representation: "complete" }),
           "UTC",

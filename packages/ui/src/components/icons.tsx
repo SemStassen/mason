@@ -2,6 +2,7 @@ import type { ComponentProps } from "react";
 import {
   MdBusiness,
   MdDeleteOutline,
+  MdLogout,
   MdOutlineArrowDownward,
   MdOutlineArrowLeft,
   MdOutlineArrowRight,
@@ -15,6 +16,8 @@ import {
   MdOutlineSettings,
   MdOutlineTimer,
   MdOutlineViewSidebar,
+  MdPause,
+  MdStop,
 } from "react-icons/md";
 
 import {
@@ -65,8 +68,11 @@ export const Icons = {
   ),
   Note: MdOutlineNote,
   Organization: MdBusiness,
+  Pause: MdPause,
   Search: MdOutlineSearch,
   Settings: MdOutlineSettings,
+  SignOut: MdLogout,
+  Stop: MdStop,
   Suitcase: PiSuitcase,
   Trash: MdDeleteOutline,
   ViewSidebar: MdOutlineViewSidebar,
