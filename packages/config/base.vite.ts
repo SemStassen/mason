@@ -1,0 +1,28 @@
+import { fileURLToPath } from "node:url";
+import react from "@vitejs/plugin-react-swc";
+import { defineConfig } from "vite";
+import i18nextLoader from "vite-plugin-i18next-loader";
+import tsconfigPaths from "vite-tsconfig-paths";
+
+const url = new URL("../../interface/locales", import.meta.url);
+
+export default defineConfig({
+  clearScreen: false,
+  root: "src",
+  build: {
+    outDir: "../dist",
+    assetsDir: ".",
+  },
+  server: {
+    port: 8002,
+  },
+  resolve: {},
+  plugins: [
+    react(),
+    i18nextLoader({
+      paths: [fileURLToPath(url.href)],
+      namespaceResolution: "relativePath",
+    }),
+    tsconfigPaths(),
+  ],
+});

@@ -1,0 +1,16 @@
+{
+  "name": "@mason/config",
+  "version": "0.0.0",
+  "private": true,
+  "scripts": {
+    "clean": "git clean -xdf .cache .turbo dist node_modules"
+  },
+  "devDependencies": {
+    "@vitejs/plugin-react-swc": "^3.7.1",
+    "vite-plugin-i18next-loader": "^2.0.14",
+    "vite-tsconfig-paths": "^5.1.0"
+  },
+  "exports": {
+    "./*": "./*"
+  }
+}

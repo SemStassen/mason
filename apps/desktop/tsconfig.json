@@ -1,0 +1,13 @@
+{
+  "extends": "@mason/config/base.tsconfig.json",
+  "compilerOptions": {
+    "rootDir": "src",
+    "declarationDir": "dist",
+    "paths": {
+      "~/*": ["./src/*"]
+    },
+    "moduleResolution": "bundler"
+  },
+  "include": ["src"],
+  "references": [{ "path": "../../interface" }]
+}

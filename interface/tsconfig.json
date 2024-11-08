@@ -1,0 +1,13 @@
+{
+  "extends": "@mason/config/base.tsconfig.json",
+  "compilerOptions": {
+    "paths": {
+      "~/*": ["./*"]
+    },
+    "types": ["vite/client"],
+    "declarationDir": "dist"
+  },
+  "include": ["**/*"],
+  "exclude": ["dist"],
+  "references": [{ "path": "../packages/ui" }]
+}

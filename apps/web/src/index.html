@@ -1,0 +1,18 @@
+<!DOCTYPE html>
+<html>
+  <head>
+    <meta charset="utf-8" />
+    <title>Mason</title>
+    <!-- <link rel="manifest" href="/manifest.json" /> -->
+    <meta name="viewport" content="width=device-width, initial-scale=1.0" />
+    <script>
+      // Some libs depend on webpack specific stuff
+      var global = globalThis || window;
+    </script>
+  </head>
+
+  <body style="height: 100vh; overscroll-behavior-x: none">
+    <div id="root"></div>
+    <script type="module" src="./index.tsx"></script>
+  </body>
+</html>

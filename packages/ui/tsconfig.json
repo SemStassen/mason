@@ -1,15 +1,9 @@
 {
-  "extends": "@mason/tsconfig/react-library.json",
+  "extends": "@mason/config/base.tsconfig.json",
   "compilerOptions": {
-    "paths": {
-      "@/*": ["./src/*"]
-    }
+    "declarationDir": "dist",
+    "outDir": "dist"
   },
-  "include": [
-    "**/*.ts",
-    "**/*.tsx",
-    "postcss.config.cjs",
-    "tailwind.config.ts"
-  ],
-  "exclude": ["node_modules", "dist"]
+  "include": ["src/**/*", "*.ts"],
+  "exclude": ["tailwind.config.ts"]
 }

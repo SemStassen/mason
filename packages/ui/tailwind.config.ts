@@ -1,10 +1,21 @@
 import type { Config } from "tailwindcss";
+import defaultTheme from "tailwindcss/defaultTheme";
 
+// The content can probably be further optimized by only referencing
+// the platform being build for in the apps directory
 export default {
-  content: ["./src/**/*.{ts,tsx}"],
+  content: [
+    "../../apps/*/src/**/*.{ts,tsx,html}",
+    "../../packages/*/src/**/*.{ts,tsx,html}",
+    "../../interface/**/*.{ts,tsx,html}",
+  ],
   darkMode: "class",
   safelist: ["dark", "light"],
   theme: {
+    fontFamily: {
+      sans: [...defaultTheme.fontFamily.sans],
+      plex: ["IBM Plex Sans", ...defaultTheme.fontFamily.sans],
+    },
     fontSize: {
       xs: ["0.75rem", { lineHeight: "1rem" }],
       sm: ["0.875rem", { lineHeight: "1.125rem" }],
@@ -52,10 +63,6 @@ export default {
         md: "calc(var(--radius) - 2px)",
         sm: "calc(var(--radius) - 4px)",
       },
-      fontFamily: {
-        sans: ["var(--font-geist-sans)"],
-        mono: ["var(--font-geist-mono)"],
-      },
       keyframes: {
         "accordion-down": {
           from: { height: "0" },
@@ -73,5 +80,5 @@ export default {
     },
   },
   // eslint-disable-next-line no-undef
-  plugins: [require("tailwindcss-animate")],
+  // plugins: [require("tailwindcss-animate")],
 } satisfies Config;

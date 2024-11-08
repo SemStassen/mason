@@ -1,14 +1,17 @@
 {
-  "extends": "@mason/tsconfig/nextjs.json",
+  "extends": "@mason/config/nextjs.tsconfig.json",
   "compilerOptions": {
     "paths": {
-      "@/*": ["./src/*"]
+      "@/*": [
+        "./src/*"
+      ]
     },
     "plugins": [
       {
         "name": "next"
       }
-    ]
+    ],
+    "incremental": true
   },
   "include": [
     "next-env.d.ts",
@@ -19,5 +22,7 @@
     "postcss.config.cjs",
     "tailwind.config.ts"
   ],
-  "exclude": ["node_modules"]
+  "exclude": [
+    "node_modules"
+  ]
 }
