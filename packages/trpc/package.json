@@ -1,0 +1,26 @@
+{
+  "name": "@mason/trpc",
+  "version": "0.0.0",
+  "private": true,
+  "scripts": {
+    "build": "trpc:generate || true",
+    "trpc:generate": "tsc --project tsconfig.json",
+    "clean": "git clean -xdf .cache .turbo dist node_modules",
+    "lint": "biome check .",
+    "format": "biome format --write .",
+    "typecheck": "tsc --noEmit"
+  },
+  "dependencies": {
+    "@trpc/client": "^10.45.2",
+    "@trpc/server": "^10.45.2",
+    "zod": "^3.23.8"
+  },
+  "devDependencies": {
+    "@mason/config": "workspace:*",
+    "typescript": "^5.3.3"
+  },
+  "exports": {
+    "./client": "./src/client",
+    "./server": "./src/server"
+  }
+}
