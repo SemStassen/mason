@@ -1,5 +1,3 @@
-"use client";
-
 import { cn } from "@mason/ui/cn";
 import { Icons } from "@mason/ui/icons";
 import { AnimatePresence, motion } from "framer-motion";

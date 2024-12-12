@@ -11,8 +11,11 @@
     "typecheck": "tsc --noEmit"
   },
   "dependencies": {
-    "@trpc/client": "^10.45.2",
-    "@trpc/server": "^10.45.2",
+    "@mason/supabase": "workspace:*",
+    "@trpc/client": "^11.0.0-rc.638",
+    "@trpc/react-query": "^11.0.0-rc.638",
+    "@trpc/server": "^11.0.0-rc.638",
+    "superjson": "^2.2.1",
     "zod": "^3.23.8"
   },
   "devDependencies": {
@@ -20,7 +23,12 @@
     "typescript": "^5.3.3"
   },
   "exports": {
-    "./client": "./src/client",
-    "./server": "./src/server"
+    "./app-router": "./src/server/routers/_app.ts",
+    "./client": "./src/client/index.ts",
+    "./client/react-query": "./src/client/react-query/index.ts",
+    "./server": "./src/server/index.ts",
+    "./server/adapters/express": "./src/server/adapters/express/index.ts",
+    "./context": "./src/server/context.ts",
+    "./schema": "./src/schema.ts"
   }
 }

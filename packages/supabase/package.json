@@ -10,6 +10,7 @@
     "typecheck": "tsc --noEmit"
   },
   "dependencies": {
+    "@mason/env": "workspace:*",
     "@supabase/ssr": "^0.4.0",
     "@supabase/supabase-js": "^2.45.1",
     "react": "^18.3.1",
@@ -22,8 +23,7 @@
   },
   "exports": {
     "./cached-queries": "./src/queries/cached-queries.ts",
-    "./client": "./src/client/client.ts",
-    "./middleware": "./src/client/middleware.ts",
+    "./browser": "./src/client/browser.ts",
     "./mutations": "./src/mutations/index.ts",
     "./queries": "./src/queries/index.ts",
     "./server": "./src/client/server.ts"

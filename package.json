@@ -21,6 +21,7 @@
   "workspaces": [
     "apps/desktop",
     "apps/web",
+    "apps/server",
     "packages/*",
     "interface"
   ]

@@ -10,6 +10,8 @@ export const useUserPreferencesStore = create<UserPreferencesState>()(
   (set) => ({
     weekStartsOnMonday: false,
     uses24HourClock: false,
-    hydrate: (data) => set((state) => ({ ...state, ...data })),
+    hydrate: async (data) => {
+      set((state) => ({ ...state, ...data }));
+    },
   }),
 );

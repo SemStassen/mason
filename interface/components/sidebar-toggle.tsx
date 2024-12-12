@@ -1,5 +1,3 @@
-"use client";
-
 import { Button } from "@mason/ui/button";
 import { Icons } from "@mason/ui/icons";
 import { useSidebarStore } from "~/stores/sidebar-store";

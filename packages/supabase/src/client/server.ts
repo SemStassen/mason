@@ -1,33 +1,32 @@
-import { createServerClient } from "@supabase/ssr";
-import { cookies } from "next/headers";
+import { env } from "@mason/env";
+import {
+  createServerClient as createClient,
+  parseCookieHeader,
+  serializeCookieHeader,
+} from "@supabase/ssr";
 
-export async function createClient() {
-  // We have to await the cookies for nextjs-15
-  const cookieStore = await cookies();
-
+// These are actually express requests and results
+function createServerClient(req: Request, res: Response) {
   // Create a server's supabase client with newly configured cookie,
   // which could be used to maintain user's session
-  return createServerClient(
-    process.env.NEXT_PUBLIC_SUPABASE_URL!,
-    process.env.NEXT_PUBLIC_SUPABASE_ANON_KEY!,
-    {
-      cookies: {
-        getAll() {
-          return cookieStore.getAll();
-        },
-        setAll(cookiesToSet) {
-          try {
-            for (const cookie of cookiesToSet) {
-              const { name, value, options } = cookie;
-              cookieStore.set(name, value, options);
-            }
-          } catch {
-            // The `setAll` method was called from a Server Component.
-            // This can be ignored if you have middleware refreshing
-            // user sessions.
-          }
-        },
+  return createClient(env.PUBLIC_SUPABASE_URL, env.PUBLIC_SUPABASE_ANON_KEY, {
+    cookies: {
+      getAll: () => {
+        return parseCookieHeader(req.headers.cookie ?? "");
+      },
+      setAll(cookiesToSet) {
+        for (const { name, value, options } of cookiesToSet) {
+          res.appendHeader(
+            "Set-Cookie",
+            serializeCookieHeader(name, value, options),
+          );
+        }
       },
     },
-  );
+    auth: {
+      flowType: "pkce",
+    },
+  });
 }
+
+export { createServerClient };
