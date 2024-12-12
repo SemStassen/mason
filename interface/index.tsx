@@ -1,5 +1,4 @@
 import { httpBatchLink } from "@mason/trpc/client/react-query";
-import { Toaster } from "@mason/ui/toaster";
 import { QueryClient, QueryClientProvider } from "@tanstack/react-query";
 import { Suspense, useState } from "react";
 import { I18nextProvider } from "react-i18next";
@@ -33,7 +32,6 @@ function MasonInterfaceRoot() {
           <QueryClientProvider client={queryClient}>
             <AppInitProvider>
               <MasonRouterProvider />
-              <Toaster />
             </AppInitProvider>
           </QueryClientProvider>
         </trpc.Provider>

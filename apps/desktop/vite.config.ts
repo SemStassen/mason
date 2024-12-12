@@ -8,6 +8,12 @@ export default defineConfig(({ mode }) => {
   return mergeConfig(baseConfig, {
     server: {
       port: 8001,
+      proxy: {
+        "/api": {
+          target: "http://localhost:4000",
+          changeOrigin: true,
+        },
+      },
     },
     build: {
       rollupOptions: {
