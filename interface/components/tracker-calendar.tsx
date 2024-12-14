@@ -13,9 +13,27 @@ import { type ReactNode, useEffect, useRef, useState } from "react";
 import { TimeEntry } from "~/components/time-entry";
 import { useTimerStore } from "~/stores/timer-store";
 import { useTrackerStore } from "~/stores/tracker-store";
-import { calculateDayProgressPercentage, formatters } from "~/utils/dates";
+import {
+  calculateDayProgressPercentage,
+  convertToLocalDate,
+  formatters,
+} from "~/utils/dates";
+import { trpc } from "~/utils/trpc";
 
 const TrackerCalendar = () => {
+  const { data: timeEntries } = trpc.timeEntries.get.useQuery({
+    from: startOfDay(addDays(new Date(), -7)).toISOString(),
+    to: endOfDay(addDays(new Date(), 7)).toISOString(),
+  });
+
+  const convertedTimeEntries = [...(timeEntries || [])]
+    .filter((entry) => entry !== null)
+    .map(({ startedAt, stoppedAt, ...rest }) => ({
+      startedAt: convertToLocalDate(startedAt),
+      stoppedAt: convertToLocalDate(stoppedAt ?? new Date().toISOString()),
+      ...rest,
+    }));
+
   // const { timeEntries, currentlyTrackingTimeEntry } = useTimeEntriesStore(
   //   (state) => ({
   //     timeEntries: state.timeEntries,
@@ -41,7 +59,6 @@ const TrackerCalendar = () => {
 
   const weekStartsOnMonday = true;
   const uses24HourClock = true;
-  const convertedTimeEntries = [] as any;
 
   const currentDate = useTrackerStore((state) => state.currentDate);
   const dateInView = useTrackerStore((state) => state.dateInView);

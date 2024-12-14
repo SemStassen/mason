@@ -10,20 +10,12 @@ import { Login } from "~/app/login";
 import { RootLayout } from "~/app/root-layout";
 import { Settings } from "~/app/settings";
 import { AppCommand } from "~/components/app-command";
+import { ErrorElement } from "~/components/error-element";
 import { Main } from "./main";
 
 const routes: Array<RouteObject> = [
   {
-    errorElement: (
-      <div className="flex h-screen w-screen items-center justify-center">
-        <div className="max-w-md space-y-4 p-6 text-center">
-          <h1 className="text-2xl font-semibold">Something went wrong</h1>
-          <p className="text-sm text-muted-foreground">
-            An unexpected error occurred. Please try refreshing the page.
-          </p>
-        </div>
-      </div>
-    ),
+    errorElement: <ErrorElement />,
     path: "/",
     element: (
       <>
