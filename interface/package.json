@@ -11,6 +11,7 @@
   },
   "dependencies": {
     "@date-fns/tz": "^1.2.0",
+    "@mason/database": "workspace:*",
     "@mason/trpc": "workspace:*",
     "@mason/ui": "workspace:*",
     "@tanstack/react-query": "^5.61.0",

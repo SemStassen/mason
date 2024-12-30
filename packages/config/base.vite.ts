@@ -17,6 +17,10 @@ export default defineConfig({
     port: 8002,
   },
   resolve: {},
+  optimizeDeps: {
+    // See: https://pglite.dev/docs/bundler-support#vite
+    exclude: ["@electric-sql/pglite"],
+  },
   plugins: [
     react(),
     i18nextLoader({

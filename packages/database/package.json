@@ -1,0 +1,30 @@
+{
+  "name": "@mason/database",
+  "version": "0.0.0",
+  "private": true,
+  "scripts": {
+    "push": "drizzle-kit push",
+    "clean": "rm -rf .turbo node_modules",
+    "lint": "biome check .",
+    "format": "biome --write .",
+    "typecheck": "tsc --noEmit"
+  },
+  "dependencies": {
+    "@electric-sql/pglite": "^0.2.15",
+    "@electric-sql/pglite-react": "^0.2.15",
+    "@electric-sql/pglite-sync": "^0.2.17",
+    "@mason/env": "workspace:*",
+    "drizzle-orm": "^0.38.2",
+    "pg": "^8.13.1",
+    "uuid": "^11.0.3"
+  },
+  "devDependencies": {
+    "@mason/config": "workspace:*",
+    "@types/pg": "^8.11.10",
+    "drizzle-kit": "^0.30.1",
+    "typescript": "^5.3.3"
+  },
+  "exports": {
+    "./pglite": "./src/pglite.tsx"
+  }
+}
