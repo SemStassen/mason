@@ -7,15 +7,15 @@ const userPreferencesRouter = router({
   get: authenticatedProcedure.query(async ({ ctx }) => {
     const { supabase, session } = ctx;
 
-    const userPreferences = await getUserPreferencesQuery(
-      supabase,
-      session.user.id,
-    );
+    // const userPreferences = await getUserPreferencesQuery(
+    //   supabase,
+    //   session.user.id,
+    // );
 
-    return {
-      weekStartsOnMonday: userPreferences.data?.weekStartsOnMonday,
-      uses24HourClock: userPreferences.data?.uses24HourClock,
-    };
+    // return {
+    //   weekStartsOnMonday: userPreferences.data?.weekStartsOnMonday,
+    //   uses24HourClock: userPreferences.data?.uses24HourClock,
+    // };
   }),
   patch: authenticatedProcedure
     .input(patchUserPreferencesSchema)

@@ -1,12 +1,10 @@
-import { type PgliteDatabase, drizzle } from "drizzle-orm/pglite";
-import * as schema from "./schema";
+import { env } from "@mason/env";
+import { type PostgresJsDatabase, drizzle } from "drizzle-orm/postgres-js";
+import postgres from "postgres";
+import * as schema from "./base-schema";
 
-const db = drizzle({
-  connection: {
-    database: "mason",
-  },
-  schema: schema,
-});
+const client = postgres(env.DATABASE_URL);
+const db = drizzle(client, { schema });
 
-export type Client = PgliteDatabase<typeof schema>;
+export type Client = PostgresJsDatabase<typeof schema>;
 export { db };

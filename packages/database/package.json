@@ -3,7 +3,8 @@
   "version": "0.0.0",
   "private": true,
   "scripts": {
-    "push": "drizzle-kit push",
+    "generate-local": "drizzle-kit generate --name=local --config=drizzle-local.config.ts",
+    "push-remote": "drizzle-kit push --config=drizzle-remote.config.ts",
     "clean": "rm -rf .turbo node_modules",
     "lint": "biome check .",
     "format": "biome --write .",
@@ -14,8 +15,10 @@
     "@electric-sql/pglite-react": "^0.2.15",
     "@electric-sql/pglite-sync": "^0.2.17",
     "@mason/env": "workspace:*",
+    "dotenv": "^16.4.7",
     "drizzle-orm": "^0.38.2",
     "pg": "^8.13.1",
+    "postgres": "^3.4.5",
     "uuid": "^11.0.3"
   },
   "devDependencies": {
