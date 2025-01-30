@@ -1,5 +1,0 @@
-function sync() {
-      
-}
-
-export { sync };

@@ -1,4 +1,4 @@
-// Maybe change timestamps to use timezones?
+// This schema is used on the remote DB and is extended by the local DB
 
 import {
   boolean,

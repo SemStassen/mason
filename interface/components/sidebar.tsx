@@ -1,6 +1,11 @@
+import { usePGlite } from "@mason/db/db";
+import { useLiveQuery } from "@mason/db/pglite";
+import { Avatar, AvatarFallback, AvatarImage } from "@mason/ui/avatar";
+import { Button } from "@mason/ui/button";
 import { cn } from "@mason/ui/cn";
 import { Icons } from "@mason/ui/icons";
 import { AnimatePresence, motion } from "framer-motion";
+import { useEffect } from "react";
 import { Link, NavLink } from "react-router-dom";
 import { useSidebarStore } from "~/stores/sidebar-store";
 
@@ -67,8 +72,9 @@ function Sidebar() {
           animate={{ width: 292 }}
           exit={{ width: 0 }}
         >
-          <div className="bg-background h-full flex-none w-[292px]">
-            <div className="flex h-full flex-col w-full pt-8 space-y-6 px-2">
+          <div className="bg-background h-full flex-none w-[292px] flex flex-col justify-between px-2 pt-8 pb-2">
+            {/* Logo and navigation */}
+            <div className="flex h-full flex-col w-full space-y-6">
               <h1 className="px-3 flex items-center justify-center py-4">
                 <Link to="/">Mason</Link>
               </h1>
@@ -80,6 +86,17 @@ function Sidebar() {
                 </ul>
               </nav>
             </div>
+            {/* User profile */}
+            <Button variant="outline" className="h-14 gap-2">
+              <Avatar className="w-8 h-8 rounded-lg">
+                <AvatarImage />
+                <AvatarFallback>SS</AvatarFallback>
+              </Avatar>
+              <div className="grid flex-1 text-left text-sm leading-tight">
+                <span className="truncate font-semibold">Sem Stassen</span>
+                <span className="truncate text-xs">semstassen@gmail.com</span>
+              </div>
+            </Button>
           </div>
         </motion.aside>
       )}

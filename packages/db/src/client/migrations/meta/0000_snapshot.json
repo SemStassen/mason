@@ -1,11 +1,11 @@
 {
-  "id": "d9f37a89-ed22-4317-9701-8fa70b9e51d9",
+  "id": "4dafd9c4-63e3-441a-8742-f67410a32fd9",
   "prevId": "00000000-0000-0000-0000-000000000000",
   "version": "7",
   "dialect": "postgresql",
   "tables": {
-    "public.projects_local": {
-      "name": "projects_local",
+    "public.projects": {
+      "name": "projects",
       "schema": "",
       "columns": {
         "uuid": {
@@ -55,7 +55,7 @@
           "name": "write_uuid",
           "type": "uuid",
           "primaryKey": false,
-          "notNull": true
+          "notNull": false
         }
       },
       "indexes": {},
@@ -66,8 +66,8 @@
       "checkConstraints": {},
       "isRLSEnabled": false
     },
-    "public.time_entries_local": {
-      "name": "time_entries_local",
+    "public.time_entries": {
+      "name": "time_entries",
       "schema": "",
       "columns": {
         "uuid": {
@@ -135,14 +135,14 @@
           "name": "write_uuid",
           "type": "uuid",
           "primaryKey": false,
-          "notNull": true
+          "notNull": false
         }
       },
       "indexes": {},
       "foreignKeys": {
-        "time_entries_local_user_uuid_users_uuid_fk": {
-          "name": "time_entries_local_user_uuid_users_uuid_fk",
-          "tableFrom": "time_entries_local",
+        "time_entries_user_uuid_users_uuid_fk": {
+          "name": "time_entries_user_uuid_users_uuid_fk",
+          "tableFrom": "time_entries",
           "tableTo": "users",
           "columnsFrom": [
             "user_uuid"
@@ -153,9 +153,9 @@
           "onDelete": "cascade",
           "onUpdate": "no action"
         },
-        "time_entries_local_project_uuid_projects_uuid_fk": {
-          "name": "time_entries_local_project_uuid_projects_uuid_fk",
-          "tableFrom": "time_entries_local",
+        "time_entries_project_uuid_projects_uuid_fk": {
+          "name": "time_entries_project_uuid_projects_uuid_fk",
+          "tableFrom": "time_entries",
           "tableTo": "projects",
           "columnsFrom": [
             "project_uuid"
@@ -173,8 +173,8 @@
       "checkConstraints": {},
       "isRLSEnabled": false
     },
-    "public.user_preferences_local": {
-      "name": "user_preferences_local",
+    "public.user_preferences": {
+      "name": "user_preferences",
       "schema": "",
       "columns": {
         "uuid": {
@@ -232,14 +232,14 @@
           "name": "write_uuid",
           "type": "uuid",
           "primaryKey": false,
-          "notNull": true
+          "notNull": false
         }
       },
       "indexes": {},
       "foreignKeys": {
-        "user_preferences_local_user_uuid_users_uuid_fk": {
-          "name": "user_preferences_local_user_uuid_users_uuid_fk",
-          "tableFrom": "user_preferences_local",
+        "user_preferences_user_uuid_users_uuid_fk": {
+          "name": "user_preferences_user_uuid_users_uuid_fk",
+          "tableFrom": "user_preferences",
           "tableTo": "users",
           "columnsFrom": [
             "user_uuid"
@@ -257,8 +257,8 @@
       "checkConstraints": {},
       "isRLSEnabled": false
     },
-    "public.users_on_projects_local": {
-      "name": "users_on_projects_local",
+    "public.users_on_projects": {
+      "name": "users_on_projects",
       "schema": "",
       "columns": {
         "uuid": {
@@ -308,7 +308,7 @@
           "name": "write_uuid",
           "type": "uuid",
           "primaryKey": false,
-          "notNull": true
+          "notNull": false
         }
       },
       "indexes": {},
@@ -319,8 +319,8 @@
       "checkConstraints": {},
       "isRLSEnabled": false
     },
-    "public.users_local": {
-      "name": "users_local",
+    "public.users": {
+      "name": "users",
       "schema": "",
       "columns": {
         "uuid": {
@@ -370,7 +370,7 @@
           "name": "write_uuid",
           "type": "uuid",
           "primaryKey": false,
-          "notNull": true
+          "notNull": false
         }
       },
       "indexes": {},

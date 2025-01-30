@@ -1,9 +1,8 @@
-import { MasonPGLiteProvider } from "@mason/database/pglite";
+import { MasonPGliteProvider } from "@mason/db/db";
 import { httpBatchLink } from "@mason/trpc/client/react-query";
 import { QueryClient, QueryClientProvider } from "@tanstack/react-query";
 import { Suspense, useState } from "react";
 import { I18nextProvider } from "react-i18next";
-import { AppInitProvider } from "./app/app-init-provider";
 import i18n from "./app/i18n";
 import { MasonRouterProvider } from "./app/router-provider";
 import { trpc } from "./utils/trpc";
@@ -29,15 +28,13 @@ function MasonInterfaceRoot() {
   return (
     <Suspense>
       <I18nextProvider i18n={i18n}>
-        <MasonPGLiteProvider>
-          <trpc.Provider client={trpcClient} queryClient={queryClient}>
-            <QueryClientProvider client={queryClient}>
-              <AppInitProvider>
-                <MasonRouterProvider />
-              </AppInitProvider>
-            </QueryClientProvider>
-          </trpc.Provider>
-        </MasonPGLiteProvider>
+        <trpc.Provider client={trpcClient} queryClient={queryClient}>
+          <QueryClientProvider client={queryClient}>
+            <MasonPGliteProvider>
+              <MasonRouterProvider />
+            </MasonPGliteProvider>
+          </QueryClientProvider>
+        </trpc.Provider>
       </I18nextProvider>
     </Suspense>
   );

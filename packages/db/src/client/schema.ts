@@ -4,35 +4,35 @@ import {
   timeEntriesDefinition,
   userPreferencesDefinition,
   usersDefinition,
-} from "./base-schema";
+} from "../server/schema";
 
 const local = {
   changedColumns: text("changed_columns"),
   isDeleted: boolean("is_deleted").default(false).notNull(),
-  writeUuid: uuid("write_uuid").notNull(),
+  writeUuid: uuid("write_uuid"),
 };
 
-export const usersTableLocal = pgTable("users_local", {
+export const usersTable = pgTable("users", {
   ...usersDefinition,
   ...local,
 });
 
-export const userPreferencesLocal = pgTable("user_preferences_local", {
+export const userPreferences = pgTable("user_preferences", {
   ...userPreferencesDefinition,
   ...local,
 });
 
-export const projectsLocal = pgTable("projects_local", {
+export const projectsLocal = pgTable("projects", {
   ...projectsDefinition,
   ...local,
 });
 
-export const usersOnProjectsLocal = pgTable("users_on_projects_local", {
+export const usersOnProjectsLocal = pgTable("users_on_projects", {
   ...projectsDefinition,
   ...local,
 });
 
-export const timeEntriesLocal = pgTable("time_entries_local", {
+export const timeEntriesLocal = pgTable("time_entries", {
   ...timeEntriesDefinition,
   ...local,
 });

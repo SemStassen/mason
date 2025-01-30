@@ -5,9 +5,6 @@ config({ path: ".env.local" });
 
 export default defineConfig({
   dialect: "postgresql",
-  schema: "./src/base-schema.ts",
-  out: "./drizzle/migrations",
-  dbCredentials: {
-    url: process.env.SUPABASE_IPV4_URL!,
-  },
+  schema: "./src/client/schema.ts",
+  out: "./src/client/migrations",
 });

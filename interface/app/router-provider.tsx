@@ -1,4 +1,4 @@
-import { createBrowserClient } from "@mason/supabase/browser";
+import { db } from "@mason/db/db";
 import { Toaster } from "@mason/ui/toaster";
 import {
   type RouteObject,
@@ -25,17 +25,9 @@ const routes: Array<RouteObject> = [
       </>
     ),
     loader: async () => {
-      // Check auth status for protected routes
-      const supabase = createBrowserClient();
-      const {
-        data: { session },
-      } = await supabase.auth.getSession();
+      await db.query.usersTable.findMany();
 
-      if (!session) {
-        return redirect("/login");
-      }
-
-      return { session };
+      return {};
     },
     children: [
       {
