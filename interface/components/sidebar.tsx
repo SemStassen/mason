@@ -1,11 +1,10 @@
-import { usePGlite } from "@mason/db/db";
 import { useLiveQuery } from "@mason/db/pglite";
 import { Avatar, AvatarFallback, AvatarImage } from "@mason/ui/avatar";
 import { Button } from "@mason/ui/button";
 import { cn } from "@mason/ui/cn";
 import { Icons } from "@mason/ui/icons";
 import { AnimatePresence, motion } from "framer-motion";
-import { useEffect } from "react";
+import { useEffect, useState } from "react";
 import { Link, NavLink } from "react-router-dom";
 import { useSidebarStore } from "~/stores/sidebar-store";
 

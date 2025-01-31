@@ -1,0 +1,1 @@
+Huge shoutout to openstatus error handling for this!

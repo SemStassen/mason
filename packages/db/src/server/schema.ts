@@ -70,7 +70,7 @@ export const projectsTable = pgTable("projects", {
   ...projectsDefinition,
 });
 
-export const usersOnProjectsDefinition = {
+export const usersToProjectsDefinition = {
   uuid: uuid("uuid")
     .primaryKey()
     .$default(() => uuidv4()),
@@ -88,8 +88,8 @@ export const usersOnProjectsDefinition = {
   // Meta
   ...timestamps,
 };
-export const usersOnProjectsTable = pgTable("users_on_projects", {
-  ...usersOnProjectsDefinition,
+export const usersToProjectsTable = pgTable("users_to_projects", {
+  ...usersToProjectsDefinition,
 });
 
 export const timeEntriesDefinition = {

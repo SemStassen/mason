@@ -8,6 +8,6 @@ export default defineConfig({
   schema: "./src/server/schema.ts",
   out: "./src/server/migrations",
   dbCredentials: {
-    url: process.env.SUPABASE_IPV4_URL!,
+    url: "postgresql://postgres.gxsyysyostbutpsfxiur:NOMLjZ14hhpZqQlg@aws-0-eu-central-1.pooler.supabase.com:5432/postgres",
   },
 });

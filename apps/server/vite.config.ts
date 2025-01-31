@@ -1,26 +1,29 @@
-import { defineConfig, loadEnv, mergeConfig } from "vite";
-import { VitePluginNode } from "vite-plugin-node";
-
-import baseConfig from "../../packages/config/base.vite";
+import devServer from "@hono/vite-dev-server";
+import { defineConfig, loadEnv } from "vite";
 
 export default defineConfig(({ mode }) => {
   process.env = { ...process.env, ...loadEnv(mode, process.cwd(), "") };
 
-  return mergeConfig(baseConfig, {
+  return {
+    clearScreen: false,
+    root: "src",
     server: {
       port: 4000,
     },
     build: {
       rollupOptions: {
         treeshake: "recommended",
+        input: "src/index.ts",
       },
     },
+    optimizeDeps: {
+      include: [],
+      exclude: [],
+    },
     plugins: [
-      VitePluginNode({
-        adapter: "express",
-        exportName: "app",
-        appPath: "./src/index.ts",
+      devServer({
+        entry: "src/index.ts",
       }),
     ],
-  });
+  };
 });

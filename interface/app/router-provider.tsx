@@ -1,4 +1,4 @@
-import { db } from "@mason/db/db";
+import { createBrowserClient } from "@mason/supabase/browser";
 import { Toaster } from "@mason/ui/toaster";
 import {
   type RouteObject,
@@ -25,9 +25,16 @@ const routes: Array<RouteObject> = [
       </>
     ),
     loader: async () => {
-      await db.query.usersTable.findMany();
+      const supabase = createBrowserClient();
+      const {
+        data: { session },
+      } = await supabase.auth.getSession();
 
-      return {};
+      if (!session) {
+        return redirect("/login");
+      }
+
+      return { session };
     },
     children: [
       {

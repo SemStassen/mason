@@ -1,37 +1,29 @@
-import { IdbFs, PGlite } from "@electric-sql/pglite";
-import { makePGliteProvider } from "@electric-sql/pglite-react";
+import { PGliteProvider } from "@electric-sql/pglite-react";
 import { type SyncNamespaceObj, electricSync } from "@electric-sql/pglite-sync";
 import { type LiveNamespace, live } from "@electric-sql/pglite/live";
-import { drizzle } from "drizzle-orm/pglite";
-import { migrate } from "./migrate";
-import * as schema from "./schema";
+import { PGliteWorker } from "@electric-sql/pglite/worker";
+import PGWorker from "./pglite-worker.js?worker";
+import { startSync } from "./sync";
 
-export type PG = PGlite & {
+// NOTE: I would prefer using makePGliteProvider here. However that does not seem to properly pass the pg instance to the context.
+// The context import works fine however
+
+export type PGliteWithExtenstions = PGliteWorker & {
   live: LiveNamespace;
   sync: SyncNamespaceObj;
 };
 
-const pg: PG = await PGlite.create({
-  fs: new IdbFs(),
-  //   fs: new MemoryFS(),
+export const pg = await PGliteWorker.create(new PGWorker(), {
   extensions: {
-    live: live,
-    sync: electricSync({
-      // debug: env.MODE === "development",
-    }),
+    live,
+    sync: electricSync(),
   },
 });
 
-await migrate(pg);
-
-const { PGliteProvider, usePGlite } = makePGliteProvider<PG>();
-
-export { usePGlite };
+await startSync(pg);
 
 export const MasonPGliteProvider = ({
   children,
 }: { children: React.ReactNode }) => {
   return <PGliteProvider db={pg}>{children}</PGliteProvider>;
 };
-
-export const db = drizzle(pg, { schema: schema });

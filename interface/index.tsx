@@ -1,5 +1,5 @@
 import { MasonPGliteProvider } from "@mason/db/db";
-import { httpBatchLink } from "@mason/trpc/client/react-query";
+import { httpBatchLink } from "@mason/trpc/client";
 import { QueryClient, QueryClientProvider } from "@tanstack/react-query";
 import { Suspense, useState } from "react";
 import { I18nextProvider } from "react-i18next";

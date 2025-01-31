@@ -18,10 +18,9 @@
     "typecheck": "turbo typecheck"
   },
   "workspaces": [
-    "apps/hono",
+    "apps/server",
     "apps/desktop",
     "apps/web",
-    "apps/server",
     "packages/*",
     "interface"
   ]

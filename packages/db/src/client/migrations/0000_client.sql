@@ -35,17 +35,6 @@ CREATE TABLE "user_preferences" (
 	"write_uuid" uuid
 );
 --> statement-breakpoint
-CREATE TABLE "users_on_projects" (
-	"uuid" uuid PRIMARY KEY NOT NULL,
-	"name" varchar NOT NULL,
-	"hex_color" varchar(7) NOT NULL,
-	"created_at" timestamp NOT NULL,
-	"updated_at" timestamp,
-	"changed_columns" text,
-	"is_deleted" boolean DEFAULT false NOT NULL,
-	"write_uuid" uuid
-);
---> statement-breakpoint
 CREATE TABLE "users" (
 	"uuid" uuid PRIMARY KEY NOT NULL,
 	"username" varchar NOT NULL,
@@ -56,6 +45,17 @@ CREATE TABLE "users" (
 	"is_deleted" boolean DEFAULT false NOT NULL,
 	"write_uuid" uuid,
 	CONSTRAINT "users_email_unique" UNIQUE("email")
+);
+--> statement-breakpoint
+CREATE TABLE "users_to_projects" (
+	"uuid" uuid PRIMARY KEY NOT NULL,
+	"name" varchar NOT NULL,
+	"hex_color" varchar(7) NOT NULL,
+	"created_at" timestamp NOT NULL,
+	"updated_at" timestamp,
+	"changed_columns" text,
+	"is_deleted" boolean DEFAULT false NOT NULL,
+	"write_uuid" uuid
 );
 --> statement-breakpoint
 ALTER TABLE "time_entries" ADD CONSTRAINT "time_entries_user_uuid_users_uuid_fk" FOREIGN KEY ("user_uuid") REFERENCES "public"."users"("uuid") ON DELETE cascade ON UPDATE no action;--> statement-breakpoint

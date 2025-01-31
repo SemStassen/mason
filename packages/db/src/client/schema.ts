@@ -27,7 +27,7 @@ export const projectsLocal = pgTable("projects", {
   ...local,
 });
 
-export const usersOnProjectsLocal = pgTable("users_on_projects", {
+export const usersToProjectsLocal = pgTable("users_to_projects", {
   ...projectsDefinition,
   ...local,
 });
