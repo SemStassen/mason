@@ -1,3 +1,4 @@
+import { db, pg } from "@mason/db/client/db";
 import { createBrowserClient } from "@mason/supabase/browser";
 import { Toaster } from "@mason/ui/toaster";
 import {
@@ -6,12 +7,28 @@ import {
   createBrowserRouter,
   redirect,
 } from "react-router-dom";
-import { Login } from "~/app/login";
-import { RootLayout } from "~/app/root-layout";
-import { Settings } from "~/app/settings";
+import { LoginPage } from "~/app/routes/login-page";
+import { RootLayout } from "~/app/routes/root-layout";
+import { SettingsPage, settingsLoader } from "~/app/routes/settings-page";
 import { AppCommand } from "~/components/app-command";
 import { ErrorElement } from "~/components/error-element";
-import { Main } from "./main";
+import { MainPage } from "./routes/main-page";
+import { ProjectsPage } from "./routes/projects-page";
+
+const appLoader = async () => {
+  const supabase = createBrowserClient();
+  const {
+    data: { session },
+  } = await supabase.auth.getSession();
+
+  if (!session) {
+    return redirect("/login");
+  }
+
+  return { userUuid: session.user.id };
+};
+
+export type AppLoaderType = typeof appLoader;
 
 const routes: Array<RouteObject> = [
   {
@@ -24,48 +41,30 @@ const routes: Array<RouteObject> = [
         <Toaster />
       </>
     ),
-    loader: async () => {
-      const supabase = createBrowserClient();
-      const {
-        data: { session },
-      } = await supabase.auth.getSession();
-
-      if (!session) {
-        return redirect("/login");
-      }
-
-      return { session };
-    },
+    loader: appLoader,
     children: [
       {
         index: true,
-        element: <Main />,
+        element: <MainPage />,
       },
       {
-        path: "/organization",
-        element: <div>Org</div>,
+        path: "/projects",
+        element: <ProjectsPage />,
       },
       {
         path: "/settings",
-        element: <Settings />,
+        element: <SettingsPage />,
+        loader: settingsLoader,
       },
     ],
   },
   {
     path: "/login",
-    element: <Login />,
+    element: <LoginPage />,
   },
 ];
 
-const router = createBrowserRouter(routes, {
-  future: {
-    v7_fetcherPersist: true,
-    v7_normalizeFormMethod: true,
-    v7_partialHydration: true,
-    v7_relativeSplatPath: true,
-    v7_skipActionErrorRevalidation: true,
-  },
-});
+const router = createBrowserRouter(routes);
 
 export function MasonRouterProvider() {
   return <RouterProvider router={router} />;

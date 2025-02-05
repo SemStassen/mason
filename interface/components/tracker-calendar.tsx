@@ -18,21 +18,20 @@ import {
   convertToLocalDate,
   formatters,
 } from "~/utils/dates";
-import { trpc } from "~/utils/trpc";
 
 const TrackerCalendar = () => {
-  const { data: timeEntries } = trpc.timeEntries.get.useQuery({
-    from: startOfDay(addDays(new Date(), -7)).toISOString(),
-    to: endOfDay(addDays(new Date(), 7)).toISOString(),
-  });
+  // const { data: timeEntries } = trpc.timeEntries.get.useQuery({
+  //   from: startOfDay(addDays(new Date(), -7)).toISOString(),
+  //   to: endOfDay(addDays(new Date(), 7)).toISOString(),
+  // });
 
-  const convertedTimeEntries = [...(timeEntries || [])]
-    .filter((entry) => entry !== null)
-    .map(({ startedAt, stoppedAt, ...rest }) => ({
-      startedAt: convertToLocalDate(startedAt),
-      stoppedAt: convertToLocalDate(stoppedAt ?? new Date().toISOString()),
-      ...rest,
-    }));
+  // const convertedTimeEntries = [...(timeEntries || [])]
+  //   .filter((entry) => entry !== null)
+  //   .map(({ startedAt, stoppedAt, ...rest }) => ({
+  //     startedAt: convertToLocalDate(startedAt),
+  //     stoppedAt: convertToLocalDate(stoppedAt ?? new Date().toISOString()),
+  //     ...rest,
+  //   }));
 
   // const { timeEntries, currentlyTrackingTimeEntry } = useTimeEntriesStore(
   //   (state) => ({
@@ -238,7 +237,7 @@ const TrackerCalendar = () => {
                 }}
               >
                 <div className="relative h-full before:absolute before:h-full before:bg-muted before:w-px">
-                  {convertedTimeEntries.map(
+                  {/* {convertedTimeEntries.map(
                     ({ uuid, project, startedAt, stoppedAt, note }) => {
                       if (
                         (startedAt >= currentDayStart &&
@@ -273,7 +272,7 @@ const TrackerCalendar = () => {
                       }
                       return null;
                     },
-                  )}
+                  )} */}
                 </div>
               </div>
             );

@@ -1,10 +1,9 @@
-import { db } from "@mason/db/db";
 import { AnimatePresence, motion } from "framer-motion";
 import { TimeEntryForm } from "~/components/forms/time-entry-form";
 import { TrackerCalendar } from "~/components/tracker-calendar";
 import { TrackerHeader } from "~/components/tracker-header";
 
-function Main() {
+function MainPage() {
   const selectedTimeEntryUuid = null;
   const selectedTimeEntry = null;
 
@@ -47,4 +46,4 @@ function Main() {
   );
 }
 
-export { Main };
+export { MainPage };

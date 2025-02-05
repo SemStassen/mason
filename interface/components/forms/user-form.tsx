@@ -1,6 +1,7 @@
 "use client";
 
 import { zodResolver } from "@hookform/resolvers/zod";
+import { useLiveQuery } from "@mason/db/client/hooks";
 import { patchUserSchema } from "@mason/trpc/schema";
 import { Button } from "@mason/ui/button";
 import {
@@ -16,43 +17,25 @@ import { Input } from "@mason/ui/input";
 import { ToastAction } from "@mason/ui/toast";
 import { useToast } from "@mason/ui/use-toast";
 import { useForm } from "react-hook-form";
-import { trpc } from "~/utils/trpc";
 
-export function UserForm() {
-  const { data: userData } = trpc.user.get.useQuery();
-  const mutation = trpc.user.patch.useMutation({
-    onSuccess: () => {
-      toast({ title: "Profile updated succesfully!" });
-    },
-    onError: () => {
-      toast({
-        variant: "destructive",
-        title: "Failed to update profile",
-        action: (
-          <ToastAction
-            altText="Retry"
-            onClick={() => {
-              onSubmit();
-            }}
-          >
-            Retry
-          </ToastAction>
-        ),
-      });
-    },
-  });
+interface userFormProps {
+  liveUsers: any;
+}
+
+export function UserForm({ liveUsers }: userFormProps) {
+  const user = useLiveQuery(liveUsers);
+
+  console.log(user);
+
   const form = useForm({
     resolver: zodResolver(patchUserSchema),
     values: {
-      username: userData?.username ?? "",
+      username: "test",
     },
   });
   const onSubmit = form.handleSubmit((data) => {
-    mutation.mutate({
-      username: data.username,
-    });
+    const { toast } = useToast();
   });
-  const { toast } = useToast();
 
   return (
     <Form {...form}>
@@ -90,9 +73,7 @@ export function UserForm() {
           )}
         />
         <div className="flex justify-end">
-          <Button type="submit" disabled={mutation.isPending}>
-            Save
-          </Button>
+          <Button type="submit">Save</Button>
         </div>
       </form>
     </Form>

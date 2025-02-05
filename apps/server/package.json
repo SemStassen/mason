@@ -23,5 +23,8 @@
     "@hono/vite-dev-server": "^0.17.0",
     "typescript": "^5.7.2",
     "vite": "^5.4.11"
+  },
+  "exports": {
+    ".": "./src/index.ts"
   }
 }

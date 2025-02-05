@@ -12,8 +12,9 @@
     "typecheck": "tsc --noEmit"
   },
   "dependencies": {
-    "@electric-sql/pglite": "^0.2.15",
-    "@electric-sql/pglite-react": "^0.2.15",
+    "@electric-sql/pglite": "^0.2.16",
+    "@electric-sql/pglite-react": "^0.2.16",
+    "@electric-sql/pglite-repl": "^0.2.16",
     "@electric-sql/pglite-sync": "^0.2.18",
     "@mason/env": "workspace:*",
     "@supabase/ssr": "^0.5.2",
@@ -31,7 +32,9 @@
   },
   "exports": {
     "./client/db": "./src/client/db.tsx",
+    "./client/hooks": "./src/client/hooks.ts",
     "./client/pglite": "./src/client/pglite.ts",
+    "./client/repl": "./src/client/repl.ts",
     "./client/supabase-client": "./src/client/supabase-client.ts",
     "./server/supabase-client": "./src/server/supabase-client.ts",
     "./server/types": "./src/server/types.ts"

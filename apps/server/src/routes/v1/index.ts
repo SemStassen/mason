@@ -1,20 +1,20 @@
 import type { Session } from "@mason/db/server/types";
 import { Hono } from "hono";
-import { cors } from "hono/cors";
+import type { RequestIdVariables } from "hono/request-id";
 import { authMiddleware } from "../../libs/middlewares/auth";
+import { gatekeeperApi } from "./gatekeeper";
 
-type Env = {
-  Variables: {
-    session: Session | null;
+export type Env = {
+  Variables: RequestIdVariables & {
+    session: Session;
   };
 };
 
-export const api = new Hono<Env>();
+export const v1Api = new Hono<Env>();
 
 /**
  * Middlewares
  */
+v1Api.use(authMiddleware);
 
-api.use("/*", authMiddleware);
-
-api.patch("/user-preferences", async (c) => {});
+v1Api.route("/gatekeeper", gatekeeperApi);

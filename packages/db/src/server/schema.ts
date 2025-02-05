@@ -7,23 +7,22 @@ import {
   uuid,
   varchar,
 } from "drizzle-orm/pg-core";
-import { v4 as uuidv4 } from "uuid";
 
+/**
+ * We have to keep the naming conventions of drizzle the same as the DB tables.
+ * Because useLiveQuery does not allow drizzle to transform the results into the drizzle names
+ */
 const timestamps = {
-  createdAt: timestamp("created_at", {
+  created_at: timestamp("created_at", {
     mode: "date",
-  })
-    .$defaultFn(() => new Date())
-    .notNull(),
-  updatedAt: timestamp("updated_at", {
+  }).defaultNow(),
+  updated_at: timestamp("updated_at", {
     mode: "date",
-  }).$onUpdateFn(() => new Date()),
+  }).defaultNow(),
 };
 
 export const usersDefinition = {
-  uuid: uuid("uuid")
-    .primaryKey()
-    .$default(() => uuidv4()),
+  uuid: uuid("uuid").primaryKey().defaultRandom(),
   // Main
   username: varchar("username").notNull(),
   email: varchar("email").unique().notNull(),
@@ -35,18 +34,18 @@ export const usersTable = pgTable("users", {
 });
 
 export const userPreferencesDefinition = {
-  uuid: uuid("uuid")
-    .primaryKey()
-    .$default(() => uuidv4()),
+  uuid: uuid("uuid").primaryKey().defaultRandom(),
   // References
-  userUuid: uuid("user_uuid")
+  user_uuid: uuid("user_uuid")
     .references(() => usersTable.uuid, {
       onDelete: "cascade",
     })
     .notNull(),
   // Main
-  weekStartsOnMonday: boolean("week_starts_on_monday").default(true).notNull(),
-  uses24HourClock: boolean("uses_24_hour_clock").default(true).notNull(),
+  week_starts_on_monday: boolean("week_starts_on_monday")
+    .default(true)
+    .notNull(),
+  uses_24_hour_clock: boolean("uses_24_hour_clock").default(true).notNull(),
   // Meta
   ...timestamps,
 };
@@ -55,12 +54,10 @@ export const userPreferencesTable = pgTable("user_preferences", {
 });
 
 export const projectsDefinition = {
-  uuid: uuid("uuid")
-    .primaryKey()
-    .$default(() => uuidv4()),
+  uuid: uuid("uuid").primaryKey().defaultRandom(),
   // Main
   name: varchar("name").notNull(),
-  hexColor: varchar("hex_color", {
+  hex_color: varchar("hex_color", {
     length: 7,
   }).notNull(),
   // Meta
@@ -71,16 +68,14 @@ export const projectsTable = pgTable("projects", {
 });
 
 export const usersToProjectsDefinition = {
-  uuid: uuid("uuid")
-    .primaryKey()
-    .$default(() => uuidv4()),
+  uuid: uuid("uuid").primaryKey().defaultRandom(),
   // References
-  userUuid: uuid("user_uuid")
+  user_uuid: uuid("user_uuid")
     .references(() => usersTable.uuid, {
       onDelete: "cascade",
     })
     .notNull(),
-  projectUuid: uuid("project_uuid")
+  project_uuid: uuid("project_uuid")
     .references(() => projectsTable.uuid, {
       onDelete: "no action",
     })
@@ -93,25 +88,23 @@ export const usersToProjectsTable = pgTable("users_to_projects", {
 });
 
 export const timeEntriesDefinition = {
-  uuid: uuid("uuid")
-    .primaryKey()
-    .$default(() => uuidv4()),
+  uuid: uuid("uuid").primaryKey().defaultRandom(),
   // References
-  userUuid: uuid("user_uuid")
+  user_uuid: uuid("user_uuid")
     .references(() => usersTable.uuid, {
       onDelete: "cascade",
     })
     .notNull(),
-  projectUuid: uuid("project_uuid")
+  project_uuid: uuid("project_uuid")
     .references(() => projectsTable.uuid, {
       onDelete: "no action",
     })
     .notNull(),
   // Main
-  startedAt: timestamp("started_at", {
+  started_at: timestamp("started_at", {
     mode: "date",
   }).notNull(),
-  stoppedAt: timestamp("stopped_at", {
+  stopped_at: timestamp("stopped_at", {
     mode: "date",
   }),
   note: varchar("note"),

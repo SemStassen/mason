@@ -12,22 +12,21 @@
   "dependencies": {
     "@date-fns/tz": "^1.2.0",
     "@mason/db": "workspace:*",
-    "@mason/trpc": "workspace:*",
     "@mason/ui": "workspace:*",
-    "@tanstack/react-query": "^5.61.0",
     "framer-motion": "^11.11.11",
+    "hono": "^4.6.20",
     "i18next-browser-languagedetector": "^8.0.0",
-    "idb": "^8.0.0",
     "react": "^18.3.1",
     "react-dom": "^18.3.1",
     "react-hotkeys-hook": "^4.6.1",
     "react-i18next": "^15.1.1",
-    "react-router": "^7.0.1",
-    "react-router-dom": "^7.0.1",
+    "react-router": "^7.1.5",
+    "react-router-dom": "^7.1.5",
     "zustand": "^5.0.1"
   },
   "devDependencies": {
     "@mason/config": "workspace:*",
+    "@mason/server": "workspace:*",
     "@types/react": "^18.3.12",
     "@types/react-dom": "^18.3.1",
     "typescript": "^5.0.0"

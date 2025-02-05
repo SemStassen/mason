@@ -1,22 +1,23 @@
-import { useLiveQuery } from "@mason/db/pglite";
+import { db } from "@mason/db/client/db";
+import { useSubscription } from "@mason/db/client/hooks";
 import { Avatar, AvatarFallback, AvatarImage } from "@mason/ui/avatar";
 import { Button } from "@mason/ui/button";
 import { cn } from "@mason/ui/cn";
 import { Icons } from "@mason/ui/icons";
 import { AnimatePresence, motion } from "framer-motion";
-import { useEffect, useState } from "react";
-import { Link, NavLink } from "react-router-dom";
+import { Link, NavLink, useLoaderData } from "react-router-dom";
+import type { AppLoaderType } from "~/app/router-provider";
 import { useSidebarStore } from "~/stores/sidebar-store";
 
-const items = [
+const NAV_ITEMS = [
   {
     name: "Tracker",
     path: "/",
     Icon: () => <Icons.Calendar size={22} fill="inherit" />,
   },
   {
-    name: "Organization",
-    path: "/organization",
+    name: "Projects",
+    path: "/projects",
     Icon: () => <Icons.Organization size={22} fill="inherit" />,
   },
   {
@@ -26,7 +27,7 @@ const items = [
   },
 ];
 
-interface itemProps {
+interface NavitemProps {
   item: {
     name: string;
     path: string;
@@ -34,7 +35,7 @@ interface itemProps {
   };
 }
 
-function Item({ item }: itemProps) {
+function NavItem({ item }: NavitemProps) {
   return (
     <li>
       <NavLink
@@ -51,6 +52,41 @@ function Item({ item }: itemProps) {
         {item.name}
       </NavLink>
     </li>
+  );
+}
+
+function NavUser() {
+  const { userUuid } = useLoaderData<AppLoaderType>();
+
+  const me = useSubscription(
+    db.query.users.findFirst({
+      where: (users, { eq }) => eq(users.uuid, userUuid),
+    }),
+    "uuid",
+  );
+
+  if (me.status === "loading") {
+    return null;
+  }
+
+  if (!me.data[0]) {
+    // TODO: Throw error
+    return null;
+  }
+
+  const { username, email } = me.data[0];
+
+  return (
+    <Button variant="outline" className="h-14 gap-2">
+      <Avatar className="w-8 h-8 rounded-lg">
+        <AvatarImage />
+        <AvatarFallback>{username.slice(0, 2).toUpperCase()}</AvatarFallback>
+      </Avatar>
+      <div className="grid flex-1 text-left text-sm leading-tight">
+        <span className="truncate font-semibold">{username}</span>
+        <span className="truncate text-xs">{email}</span>
+      </div>
+    </Button>
   );
 }
 
@@ -79,23 +115,14 @@ function Sidebar() {
               </h1>
               <nav className="flex min-h-0 flex-col">
                 <ul className="space-y-0.5">
-                  {items.map((item) => {
-                    return <Item key={item.path} item={item} />;
+                  {NAV_ITEMS.map((item) => {
+                    return <NavItem key={item.path} item={item} />;
                   })}
                 </ul>
               </nav>
             </div>
             {/* User profile */}
-            <Button variant="outline" className="h-14 gap-2">
-              <Avatar className="w-8 h-8 rounded-lg">
-                <AvatarImage />
-                <AvatarFallback>SS</AvatarFallback>
-              </Avatar>
-              <div className="grid flex-1 text-left text-sm leading-tight">
-                <span className="truncate font-semibold">Sem Stassen</span>
-                <span className="truncate text-xs">semstassen@gmail.com</span>
-              </div>
-            </Button>
+            <NavUser />
           </div>
         </motion.aside>
       )}

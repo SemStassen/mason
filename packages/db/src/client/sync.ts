@@ -1,18 +1,18 @@
-import { env } from "@mason/env";
+import { FetchError } from "@electric-sql/client";
+import { clientEnv } from "@mason/env";
 import type { PGliteWithExtenstions } from "./db";
 
+const ELECTRIC_URL = `${clientEnv.PUBLIC_ELECTRIC_URL}/v1/shape`;
+
 async function startSync(pg: PGliteWithExtenstions) {
-  const ELECTRIC_URL = `${env.PUBLIC_ELECTRIC_URL}/v1/shape`;
+  const meConfig = await fetch(
+    "http://localhost:8002/api/v1/gatekeeper/me",
+  ).then((res) => res.json());
 
   await pg.sync.syncShapeToTable({
-    shape: {
-      url: ELECTRIC_URL,
-      params: {
-        table: "users",
-      },
-    },
+    ...meConfig,
     table: "users",
-    primaryKey: ["uuid]"],
+    primaryKey: ["uuid"],
     shapeKey: "users",
     commitGranularity: "up-to-date",
     useCopy: true,
@@ -26,7 +26,7 @@ async function startSync(pg: PGliteWithExtenstions) {
       },
     },
     table: "user_preferences",
-    primaryKey: ["uuid]"],
+    primaryKey: ["uuid"],
     shapeKey: "user_preferences",
     commitGranularity: "up-to-date",
     useCopy: true,
@@ -39,7 +39,7 @@ async function startSync(pg: PGliteWithExtenstions) {
       },
     },
     table: "projects",
-    primaryKey: ["uuid]"],
+    primaryKey: ["uuid"],
     shapeKey: "projects",
     commitGranularity: "up-to-date",
     useCopy: true,
@@ -52,7 +52,7 @@ async function startSync(pg: PGliteWithExtenstions) {
       },
     },
     table: "users_to_projects",
-    primaryKey: ["uuid]"],
+    primaryKey: ["uuid"],
     shapeKey: "users_to_projects",
     commitGranularity: "up-to-date",
     useCopy: true,
@@ -65,7 +65,7 @@ async function startSync(pg: PGliteWithExtenstions) {
       },
     },
     table: "time_entries",
-    primaryKey: ["uuid]"],
+    primaryKey: ["uuid"],
     shapeKey: "time_entries",
     commitGranularity: "up-to-date",
     useCopy: true,

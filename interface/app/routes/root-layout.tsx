@@ -1,5 +1,5 @@
 import { Sidebar } from "@mason/interface/components/sidebar";
-import { Outlet } from "react-router";
+import { Outlet } from "react-router-dom";
 import { SidebarToggle } from "~/components/sidebar-toggle";
 
 function RootLayout() {

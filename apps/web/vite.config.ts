@@ -7,13 +7,15 @@ export default defineConfig(({ mode }) => {
   return mergeConfig(baseConfig, {
     server: {
       port: 8002,
-
-      // proxy: {
-      //   "/api": {
-      //     target: "http://localhost:4000",
-      //     changeOrigin: true,
-      //   },
-      // },
+      proxy: {
+        "/api": {
+          target: "http://localhost:4000",
+          changeOrigin: true,
+        },
+      },
+    },
+    worker: {
+      format: "es",
     },
   });
 });

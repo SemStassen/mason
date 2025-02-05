@@ -11,9 +11,9 @@ const root = ReactDOM.createRoot(
 );
 
 root.render(
-  <React.StrictMode>
-    <Suspense>
-      <App />
-    </Suspense>
-  </React.StrictMode>,
+  // <React.StrictMode>
+  <Suspense>
+    <App />
+  </Suspense>,
+  // </React.StrictMode>,
 );

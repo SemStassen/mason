@@ -1,6 +1,8 @@
 "use client";
 
 import { zodResolver } from "@hookform/resolvers/zod";
+import { db } from "@mason/db/client/db";
+import { useSubscription } from "@mason/db/client/hooks";
 import { patchUserPreferencesSchema } from "@mason/trpc/schema";
 import { Button } from "@mason/ui/button";
 import {
@@ -11,48 +13,27 @@ import {
   FormLabel,
   FormMessage,
 } from "@mason/ui/form";
-import { ToastAction } from "@mason/ui/toast";
 import { ToggleGroup, ToggleGroupItem } from "@mason/ui/toggle-group";
 import { useToast } from "@mason/ui/use-toast";
 import { useForm } from "react-hook-form";
-import { useUserPreferencesStore } from "~/stores/user-preferences-store";
-import { trpc } from "~/utils/trpc";
 
-export function UserPreferencesForm() {
-  const { data: userPreferences } = trpc.userPreferences.get.useQuery();
+interface UserPreferencesFormProps {
+  weekStartsOnMonday: boolean;
+  uses24HourClock: boolean;
+}
 
-  const mutation = trpc.userPreferences.patch.useMutation({
-    onSuccess: () => toast({ title: "Preferences updated succesfully!" }),
-    onError: () =>
-      toast({
-        variant: "destructive",
-        title: "Failed to update preferences",
-        action: (
-          <ToastAction
-            altText="Retry"
-            onClick={() => {
-              onSubmit();
-            }}
-          >
-            Retry
-          </ToastAction>
-        ),
-      }),
-  });
-
+export function UserPreferencesForm({
+  weekStartsOnMonday,
+  uses24HourClock,
+}: UserPreferencesFormProps) {
   const form = useForm({
     resolver: zodResolver(patchUserPreferencesSchema),
     values: {
-      weekStartsOnMonday: userPreferences?.weekStartsOnMonday,
-      uses24HourClock: userPreferences?.uses24HourClock,
+      weekStartsOnMonday: weekStartsOnMonday,
+      uses24HourClock: uses24HourClock,
     },
   });
-  const onSubmit = form.handleSubmit((data) => {
-    mutation.mutate({
-      weekStartsOnMonday: data.weekStartsOnMonday,
-      uses24HourClock: data.uses24HourClock,
-    });
-  });
+  const onSubmit = form.handleSubmit((data) => {});
   const { toast } = useToast();
 
   return (
@@ -103,9 +84,7 @@ export function UserPreferencesForm() {
           )}
         />
         <div className="flex justify-end">
-          <Button type="submit" disabled={mutation.isPending}>
-            Save
-          </Button>
+          <Button type="submit">Save</Button>
         </div>
       </form>
     </Form>

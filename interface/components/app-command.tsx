@@ -13,18 +13,14 @@ import { DialogDescription, DialogTitle } from "@mason/ui/dialog";
 import { Icons } from "@mason/ui/icons";
 import { useState } from "react";
 import { useHotkeys } from "react-hotkeys-hook";
-import { redirect, useNavigate } from "react-router";
-import { Link } from "react-router-dom";
+import { useNavigate } from "react-router-dom";
 import { useSidebarStore } from "~/stores/sidebar-store";
-import { trpc } from "~/utils/trpc";
 
 function AppCommand() {
   const toggleIsSidebarOpen = useSidebarStore(
     (state) => state.toggleIsSidebarOpen,
   );
-  const signOut = () => {
-    trpc.auth.signOut.useQuery();
-  };
+  const signOut = () => {};
 
   const [isCommandModalOpen, setIsCommandModalOpen] = useState<boolean>(false);
   const [isStartTrackingModalOpen, setIsStartTrackingModalOpen] =
@@ -132,6 +128,17 @@ function AppCommand() {
             >
               <Icons.Trash />
               <span>Clear local storage</span>
+            </CommandItem>
+            <CommandItem
+              value="Clear local database"
+              onSelect={() =>
+                handleCommandAction(() => {
+                  indexedDB.deleteDatabase("/pglite/mason");
+                })
+              }
+            >
+              <Icons.Trash />
+              <span>Clear local database</span>
             </CommandItem>
           </CommandGroup>
         </CommandList>

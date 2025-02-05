@@ -1,3 +1,4 @@
+import type { InferSelectModel } from "drizzle-orm";
 import { boolean, pgTable, text, uuid } from "drizzle-orm/pg-core";
 import {
   projectsDefinition,
@@ -12,27 +13,32 @@ const local = {
   writeUuid: uuid("write_uuid"),
 };
 
-export const usersTable = pgTable("users", {
+export type UserType = InferSelectModel<typeof users>;
+export const users = pgTable("users", {
   ...usersDefinition,
   ...local,
 });
 
+export type UserPreferenceType = InferSelectModel<typeof userPreferences>;
 export const userPreferences = pgTable("user_preferences", {
   ...userPreferencesDefinition,
   ...local,
 });
 
-export const projectsLocal = pgTable("projects", {
+export type ProjectType = InferSelectModel<typeof projects>;
+export const projects = pgTable("projects", {
   ...projectsDefinition,
   ...local,
 });
 
-export const usersToProjectsLocal = pgTable("users_to_projects", {
+export type userToProjectType = InferSelectModel<typeof usersToProjects>;
+export const usersToProjects = pgTable("users_to_projects", {
   ...projectsDefinition,
   ...local,
 });
 
-export const timeEntriesLocal = pgTable("time_entries", {
+export type timeEntryType = InferSelectModel<typeof timeEntries>;
+export const timeEntries = pgTable("time_entries", {
   ...timeEntriesDefinition,
   ...local,
 });
