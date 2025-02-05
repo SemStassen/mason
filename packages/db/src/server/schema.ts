@@ -2,11 +2,13 @@
 
 import {
   boolean,
+  pgPolicy,
   pgTable,
   timestamp,
   uuid,
   varchar,
 } from "drizzle-orm/pg-core";
+import { sql } from "drizzle-orm/sql";
 
 /**
  * We have to keep the naming conventions of drizzle the same as the DB tables.
@@ -49,9 +51,20 @@ export const userPreferencesDefinition = {
   // Meta
   ...timestamps,
 };
-export const userPreferencesTable = pgTable("user_preferences", {
-  ...userPreferencesDefinition,
-});
+export const userPreferencesTable = pgTable(
+  "user_preferences",
+  {
+    ...userPreferencesDefinition,
+  },
+  // (t) => [
+  //   pgPolicy("user_preferences_access_by_user_uuid", {
+  //     as: "permissive",
+  //     to: "public",
+  //     for: "all",
+  //     using: sql`true`,
+  //   }),
+  // ],
+);
 
 export const projectsDefinition = {
   uuid: uuid("uuid").primaryKey().defaultRandom(),

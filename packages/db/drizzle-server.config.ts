@@ -10,4 +10,5 @@ export default defineConfig({
   dbCredentials: {
     url: `postgresql://postgres.gxsyysyostbutpsfxiur:${process.env.SUPABASE_PASSWORD}@aws-0-eu-central-1.pooler.supabase.com:5432/postgres`,
   },
+  strict: true,
 });

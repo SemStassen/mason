@@ -4,6 +4,7 @@ import {
   parseCookieHeader,
   serializeCookieHeader,
 } from "@supabase/ssr";
+export type { SupabaseClient } from "@supabase/supabase-js";
 
 // Note: These are actually Hono Requests and Responses.
 function createServerClient(req: any, res: any) {

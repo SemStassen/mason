@@ -24,6 +24,7 @@ export const authMiddleware = createMiddleware(async (context, next) => {
   }
 
   context.set("session", session);
+  context.set("supabase", supabase);
 
   await next();
 });

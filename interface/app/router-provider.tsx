@@ -1,4 +1,3 @@
-import { db, pg } from "@mason/db/client/db";
 import { createBrowserClient } from "@mason/supabase/browser";
 import { Toaster } from "@mason/ui/toaster";
 import {

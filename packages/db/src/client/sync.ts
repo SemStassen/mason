@@ -1,4 +1,3 @@
-import { FetchError } from "@electric-sql/client";
 import { clientEnv } from "@mason/env";
 import type { PGliteWithExtenstions } from "./db";
 

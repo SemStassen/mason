@@ -36,6 +36,7 @@
     "./client/pglite": "./src/client/pglite.ts",
     "./client/repl": "./src/client/repl.ts",
     "./client/supabase-client": "./src/client/supabase-client.ts",
+    "./client/schema": "./src/client/schema.ts",
     "./server/supabase-client": "./src/server/supabase-client.ts",
     "./server/types": "./src/server/types.ts"
   }

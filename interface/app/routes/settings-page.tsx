@@ -1,14 +1,22 @@
 import { db, pg } from "@mason/db/client/db";
 import { useLiveQuery } from "@mason/db/client/hooks";
+import type { LiveQuery } from "@mason/db/client/pglite";
+import type { UserPreferenceType, UserType } from "@mason/db/client/schema";
 import { createBrowserClient } from "@mason/supabase/browser";
 import { redirect, useLoaderData } from "react-router-dom";
 import { UserForm } from "~/components/forms/user-form";
 import { UserPreferencesForm } from "~/components/forms/user-preferences-form";
-import type { UserPreferenceType } from "../../../packages/db/src/client/schema";
 
-// TODO - EXPORT SCHEMA
+type SettingsLoaderReturns =
+  | Response
+  | {
+      liveUserMe: LiveQuery<UserType>;
+      liveUserMePreferences: LiveQuery<UserPreferenceType>;
+    };
 
-async function settingsLoader({ request }: { request: Request }) {
+async function settingsLoader({
+  request,
+}: { request: Request }): Promise<SettingsLoaderReturns> {
   const supabase = createBrowserClient();
   const { data } = await supabase.auth.getSession();
 
@@ -29,15 +37,15 @@ async function settingsLoader({ request }: { request: Request }) {
     })
     .toSQL();
 
-  const [liveUsers, liveUserPreferences] = await Promise.all([
-    pg.live.query({
+  const [liveUserMe, liveUserMePreferences] = await Promise.all([
+    pg.live.query<UserType>({
       query: userQuery.sql,
       params: userQuery.params,
       signal: request.signal,
       offset: 0,
       limit: 1,
     }),
-    pg.live.query({
+    pg.live.query<UserPreferenceType>({
       query: userPreferencesQuery.sql,
       params: userPreferencesQuery.params,
       signal: request.signal,
@@ -46,39 +54,19 @@ async function settingsLoader({ request }: { request: Request }) {
     }),
   ]);
 
-  if (
-    liveUserPreferences.initialResults.totalCount === 0 ||
-    liveUsers.initialResults.totalCount === 0
-  ) {
-    throw new Response("Not Found", { status: 404 });
-  }
-
-  return { liveUsers, liveUserPreferences };
+  return { liveUserMe, liveUserMePreferences };
 }
 
 function SettingsPage() {
-  const { liveUsers, liveUserPreferences } =
-    useLoaderData<typeof settingsLoader>();
-
-  const userPreferences =
-    // @ts-expect-error
-    useLiveQuery<UserPreferenceType>(liveUserPreferences);
-
-  if (!userPreferences?.rows[0]) {
-    throw Error;
-  }
-
-  const { week_starts_on_monday, uses_24_hour_clock } = userPreferences.rows[0];
+  const { liveUserMe, liveUserMePreferences } =
+    useLoaderData<Exclude<SettingsLoaderReturns, Response>>();
 
   return (
     <div className="max-w-[750px] w-full mx-auto px-6">
       <h2 className="text-2xl font-bold py-8">Profile</h2>
-      <UserForm liveUsers={liveUsers} />
+      <UserForm liveUserMe={liveUserMe} />
       <h2 className="text-2xl font-bold py-8">Preferences</h2>
-      <UserPreferencesForm
-        weekStartsOnMonday={week_starts_on_monday}
-        uses24HourClock={uses_24_hour_clock}
-      />
+      <UserPreferencesForm liveUserMePreferences={liveUserMePreferences} />
     </div>
   );
 }

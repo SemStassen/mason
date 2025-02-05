@@ -2,6 +2,8 @@
 
 import { zodResolver } from "@hookform/resolvers/zod";
 import { useLiveQuery } from "@mason/db/client/hooks";
+import type { LiveQuery } from "@mason/db/client/pglite";
+import type { UserType } from "@mason/db/client/schema";
 import { patchUserSchema } from "@mason/trpc/schema";
 import { Button } from "@mason/ui/button";
 import {
@@ -14,23 +16,26 @@ import {
   FormMessage,
 } from "@mason/ui/form";
 import { Input } from "@mason/ui/input";
-import { ToastAction } from "@mason/ui/toast";
 import { useToast } from "@mason/ui/use-toast";
 import { useForm } from "react-hook-form";
 
 interface userFormProps {
-  liveUsers: any;
+  liveUserMe: LiveQuery<UserType>;
 }
 
-export function UserForm({ liveUsers }: userFormProps) {
-  const user = useLiveQuery(liveUsers);
+export function UserForm({ liveUserMe }: userFormProps) {
+  const user = useLiveQuery(liveUserMe);
 
-  console.log(user);
+  if (!user.rows[0]) {
+    return <div>ERROR</div>;
+  }
+
+  const { username } = user.rows[0];
 
   const form = useForm({
     resolver: zodResolver(patchUserSchema),
     values: {
-      username: "test",
+      username: username,
     },
   });
   const onSubmit = form.handleSubmit((data) => {
