@@ -5,8 +5,10 @@ import { Button } from "@mason/ui/button";
 import { cn } from "@mason/ui/cn";
 import { Icons } from "@mason/ui/icons";
 import { AnimatePresence, motion } from "framer-motion";
+import { useHotkeys } from "react-hotkeys-hook";
 import { Link, NavLink, useLoaderData } from "react-router-dom";
 import type { AppLoaderType } from "~/app/router-provider";
+import { hotkeys } from "~/lib/hotkeys";
 import { useSidebarStore } from "~/stores/sidebar-store";
 
 const NAV_ITEMS = [
