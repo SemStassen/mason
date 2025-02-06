@@ -18,6 +18,9 @@ coverage
 # Turbo
 .turbo
 
+# Fly
+fly.toml
+
 # Vercel
 .vercel
 
