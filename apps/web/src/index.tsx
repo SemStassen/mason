@@ -9,10 +9,11 @@ import App from "./app";
 const root = ReactDOM.createRoot(
   document.getElementById("root") as HTMLElement,
 );
+
 root.render(
-  <React.StrictMode>
-    <Suspense>
-      <App />
-    </Suspense>
-  </React.StrictMode>,
+  // <React.StrictMode>
+  <Suspense>
+    <App />
+  </Suspense>,
+  // </React.StrictMode>,
 );

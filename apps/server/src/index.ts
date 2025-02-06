@@ -1,37 +1,43 @@
-import { env } from "@mason/env";
-import { appRouter } from "@mason/trpc/app-router";
-import { createContext } from "@mason/trpc/context";
-import * as trpcExpress from "@mason/trpc/server/adapters/express";
-import cors from "cors";
-import express from "express";
+import { Hono } from "hono";
+import { logger } from "hono/logger";
+import { prettyJSON } from "hono/pretty-json";
+import { requestId } from "hono/request-id";
+import { handleError } from "./libs/errors";
+import { publicApi } from "./routes/public";
+import { v1Api } from "./routes/v1";
 
-export const app = express();
+const app = new Hono().basePath("/api");
 
-// Enable CORS for development
-app.use(
-  cors({
-    origin:
-      env.MODE === "production" ? "PRODUCTION_DOMAIN" : "http://localhost:8000",
-    credentials: true,
-  }),
-);
+/**
+ * Middleware
+ */
+app.use("*", requestId());
+app.use("*", logger());
+app.use("*", prettyJSON());
 
-app.use(
-  "/api",
-  trpcExpress.createExpressMiddleware({
-    router: appRouter,
-    createContext: createContext,
-  }),
-);
+app.onError(handleError);
 
-// Only start the server if we're not running with Vite
-if (env.MODE === "production") {
-  app
-    .listen(4000, () => {
-      console.log("API Server running on http://localhost:4000");
-    })
-    .on("error", (error) => {
-      console.error("❌ Failed to start server:", error);
-      process.exit(1);
-    });
-}
+/**
+ * Public Routes
+ */
+app.route("/public", publicApi);
+
+/**
+ * Ping
+ */
+
+app.get("/ping", (c) => {
+  return c.json(
+    {
+      ping: "pong",
+      requestId: c.get("requestId"),
+    },
+    200,
+  );
+});
+
+app.route("/v1", v1Api);
+
+export default app;
+
+export type AppType = typeof app;

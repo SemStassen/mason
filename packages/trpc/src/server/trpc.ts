@@ -1,4 +1,4 @@
-import { env } from "@mason/env";
+import { serverEnv } from "@mason/env";
 import { TRPCError, initTRPC } from "@trpc/server";
 import type { createContext } from "./context";
 
@@ -9,7 +9,7 @@ import type { createContext } from "./context";
 const t = initTRPC.context<typeof createContext>().create({
   //   transformer: SuperJSON,
   errorFormatter({ shape, error }) {
-    if (env.MODE === "development") {
+    if (serverEnv.MODE === "development") {
       console.error("TRPC Error:", {
         message: error.message,
         code: error.code,
@@ -27,7 +27,7 @@ export const publicProcedure = t.procedure.use(
   async (opts) => {
     const result = await opts.next();
 
-    if (env.MODE === "development") {
+    if (serverEnv.MODE === "development") {
       console.log(`--- Status: ${result.ok ? "succes" : "failure"} ---`);
       console.log(`--- Context: ${opts.ctx} ---`);
       console.log(`--- Path: ${opts.path}, Type: ${opts.type} ---`);

@@ -1,6 +1,10 @@
 "use client";
 
 import { zodResolver } from "@hookform/resolvers/zod";
+import { db } from "@mason/db/client/db";
+import { useLiveQuery, useSubscription } from "@mason/db/client/hooks";
+import type { LiveQuery } from "@mason/db/client/pglite";
+import type { UserPreferenceType } from "@mason/db/client/schema";
 import { patchUserPreferencesSchema } from "@mason/trpc/schema";
 import { Button } from "@mason/ui/button";
 import {
@@ -11,47 +15,43 @@ import {
   FormLabel,
   FormMessage,
 } from "@mason/ui/form";
-import { ToastAction } from "@mason/ui/toast";
 import { ToggleGroup, ToggleGroupItem } from "@mason/ui/toggle-group";
 import { useToast } from "@mason/ui/use-toast";
 import { useForm } from "react-hook-form";
-import { useUserPreferencesStore } from "~/stores/user-preferences-store";
-import { trpc } from "~/utils/trpc";
 
-export function UserPreferencesForm() {
-  const { data: userPreferences } = trpc.userPreferences.get.useQuery();
+interface UserPreferencesFormProps {
+  liveUserMePreferences: LiveQuery<UserPreferenceType>;
+}
 
-  const mutation = trpc.userPreferences.patch.useMutation({
-    onSuccess: () => toast({ title: "Preferences updated succesfully!" }),
-    onError: () =>
-      toast({
-        variant: "destructive",
-        title: "Failed to update preferences",
-        action: (
-          <ToastAction
-            altText="Retry"
-            onClick={() => {
-              onSubmit();
-            }}
-          >
-            Retry
-          </ToastAction>
-        ),
-      }),
-  });
+export function UserPreferencesForm({
+  liveUserMePreferences,
+}: UserPreferencesFormProps) {
+  const userPreference = useLiveQuery(liveUserMePreferences);
+
+  if (!userPreference.rows[0]) {
+    return <div>ERROR</div>;
+  }
+
+  const { week_starts_on_monday, uses_24_hour_clock } = userPreference.rows[0];
 
   const form = useForm({
     resolver: zodResolver(patchUserPreferencesSchema),
     values: {
-      weekStartsOnMonday: userPreferences?.weekStartsOnMonday,
-      uses24HourClock: userPreferences?.uses24HourClock,
+      weekStartsOnMonday: week_starts_on_monday,
+      uses24HourClock: uses_24_hour_clock,
     },
   });
-  const onSubmit = form.handleSubmit((data) => {
-    mutation.mutate({
-      weekStartsOnMonday: data.weekStartsOnMonday,
-      uses24HourClock: data.uses24HourClock,
+
+  const onSubmit = form.handleSubmit(async (data) => {
+    const res = await fetch("http://localhost:8002/api/v1/user-preferences", {
+      method: "PATCH",
+      headers: {
+        "Content-Type": "application/json",
+      },
+      body: JSON.stringify(data),
     });
+
+    console.log(res);
   });
   const { toast } = useToast();
 
@@ -103,9 +103,7 @@ export function UserPreferencesForm() {
           )}
         />
         <div className="flex justify-end">
-          <Button type="submit" disabled={mutation.isPending}>
-            Save
-          </Button>
+          <Button type="submit">Save</Button>
         </div>
       </form>
     </Form>

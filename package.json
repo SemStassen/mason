@@ -18,9 +18,9 @@
     "typecheck": "turbo typecheck"
   },
   "workspaces": [
+    "apps/server",
     "apps/desktop",
     "apps/web",
-    "apps/server",
     "packages/*",
     "interface"
   ]

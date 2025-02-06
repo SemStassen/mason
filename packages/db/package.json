@@ -1,0 +1,43 @@
+{
+  "name": "@mason/db",
+  "version": "0.0.0",
+  "private": true,
+  "scripts": {
+    "generate-client": "drizzle-kit generate --name=client --config=drizzle-client.config.ts",
+    "generate-server": "drizzle-kit generate --name=server --config=drizzle-server.config.ts",
+    "push-server": "drizzle-kit push --config=drizzle-server.config.ts",
+    "clean": "rm -rf .turbo node_modules",
+    "lint": "biome check .",
+    "format": "biome --write .",
+    "typecheck": "tsc --noEmit"
+  },
+  "dependencies": {
+    "@electric-sql/pglite": "^0.2.16",
+    "@electric-sql/pglite-react": "^0.2.16",
+    "@electric-sql/pglite-repl": "^0.2.16",
+    "@electric-sql/pglite-sync": "^0.2.18",
+    "@mason/env": "workspace:*",
+    "@supabase/ssr": "^0.5.2",
+    "drizzle-orm": "^0.38.2",
+    "postgres": "^3.4.5",
+    "react": "^18.3.1",
+    "uuid": "^11.0.3"
+  },
+  "devDependencies": {
+    "@mason/config": "workspace:*",
+    "@types/pg": "^8.11.10",
+    "dotenv": "^16.4.7",
+    "drizzle-kit": "^0.30.1",
+    "typescript": "^5.3.3"
+  },
+  "exports": {
+    "./client/db": "./src/client/db.tsx",
+    "./client/hooks": "./src/client/hooks.ts",
+    "./client/pglite": "./src/client/pglite.ts",
+    "./client/repl": "./src/client/repl.ts",
+    "./client/supabase-client": "./src/client/supabase-client.ts",
+    "./client/schema": "./src/client/schema.ts",
+    "./server/supabase-client": "./src/server/supabase-client.ts",
+    "./server/types": "./src/server/types.ts"
+  }
+}

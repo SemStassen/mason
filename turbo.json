@@ -6,12 +6,7 @@
       "dependsOn": ["^topo"]
     },
     "build": {
-      "env": [
-        "NODE_ENV",
-        "NEXT_PUBLIC_SUPABASE_URL",
-        "NEXT_PUBLIC_SUPABASE_ANON_KEY",
-        "NEXT_PUBLIC_SUPABASE_REFERENCE_ID"
-      ],
+      "env": ["NODE_ENV"],
       "dependsOn": ["^build"],
       "inputs": ["$TURBO_DEFAULT$", ".env*"],
       "outputs": [".next/**", "!.next/cache/**"]

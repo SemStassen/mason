@@ -1,7 +1,7 @@
 {
   "name": "@mason/server",
   "version": "0.0.0",
-  "private": true,
+  "private": "true",
   "type": "module",
   "scripts": {
     "dev": "vite",
@@ -13,17 +13,18 @@
     "typecheck": "tsc --noEmit"
   },
   "dependencies": {
-    "@mason/trpc": "workspace:*",
-    "cors": "^2.8.5",
-    "express": "^4.21.1"
+    "@mason/db": "workspace:*",
+    "@mason/env": "workspace:*",
+    "@mason/error": "workspace:*",
+    "hono": "^4.6.15",
+    "zod": "^3.24.1"
   },
   "devDependencies": {
-    "@mason/config": "*",
-    "@types/cors": "^2.8.17",
-    "@types/express": "^5.0.0",
-    "typescript": "^5.0.0",
-    "vite": "^5.4.11",
-    "vite-plugin-node": "^4.0.0"
-
+    "@hono/vite-dev-server": "^0.17.0",
+    "typescript": "^5.7.2",
+    "vite": "^5.4.11"
+  },
+  "exports": {
+    ".": "./src/index.ts"
   }
 }
