@@ -1,0 +1,20 @@
+{
+  "name": "@mason/graphql-server",
+  "version": "0.0.0",
+  "private": "true",
+  "type": "module",
+  "scripts": {
+    "clean": "git clean -xdf .cache .turbo dist node_modules",
+    "lint": "biome check .",
+    "format": "biome format --write .",
+    "typecheck": "tsc --noEmit"
+  },
+  "dependencies": {
+    "@apollo/server": "^4.11.3",
+    "@mason/env": "workspace:*"
+  },
+  "devDependencies": {
+    "typescript": "^5.7.2"
+  },
+  "exports": {}
+}

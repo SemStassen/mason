@@ -18,6 +18,7 @@
     "typecheck": "turbo typecheck"
   },
   "workspaces": [
+    "apps/graphql-server",
     "apps/server",
     "apps/desktop",
     "apps/web",
