@@ -1,5 +1,4 @@
 import { db, pg } from "@mason/db/client/db";
-import { useLiveQuery } from "@mason/db/client/hooks";
 import type { LiveQuery } from "@mason/db/client/pglite";
 import type { UserPreferenceType, UserType } from "@mason/db/client/schema";
 import { createBrowserClient } from "@mason/supabase/browser";

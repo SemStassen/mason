@@ -22,9 +22,9 @@ export const pg = await PGliteWorker.create(new PGWorker(), {
   },
 });
 
-// await startSync(pg);
+await startSync(pg);
 
-// Note: There is a type-error because this is a PGlite-worker instead of a normal PGlite instance
+// @ts-expect-error the pg instance is actually a web-worker, which drizzle does not like
 export const db = drizzle({ client: pg, schema: schema });
 
 export const MasonPGliteProvider = ({
